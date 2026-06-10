@@ -27,10 +27,12 @@ export default function LikedSongsPage() {
   return (
     <div className="flex flex-col min-h-full bg-[#05050f] pb-[120px]">
       {/* Immersive Hero */}
-      <div className="relative w-full h-[40vh] min-h-[300px] flex items-end p-6 md:p-10 z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary to-secondary blur-3xl opacity-20 z-0"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-[#05050f] to-transparent z-0"></div>
-        <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-primary/20 blur-[120px] rounded-full opacity-60 z-0"></div>
+      <div className="relative w-full h-[40vh] min-h-[300px] flex items-end p-6 md:p-10 z-10">
+        {/* Decorative blurs — isolated overflow-hidden so they don't clip content */}
+        <div className="absolute inset-0 overflow-hidden rounded-none pointer-events-none z-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary to-secondary blur-3xl opacity-20"></div>
+          <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-primary/20 blur-[120px] rounded-full opacity-60"></div>
+        </div>
         
         <div className="relative z-10 flex flex-col md:flex-row items-end gap-6 w-full">
           <div className="w-32 h-32 md:w-48 md:h-48 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-[0_0_40px_rgba(168,85,247,0.5)] shrink-0 border border-white/20 relative group">
@@ -46,21 +48,22 @@ export default function LikedSongsPage() {
             </p>
           </div>
         </div>
+      </div>
 
-        {/* Floating Neon Play Button */}
-        <div className="absolute -bottom-8 right-8 z-20">
-           <button 
-             onClick={handlePlayAll}
-             className={cn("w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center text-white shadow-[0_0_30px_rgba(236,72,153,0.6)] hover:scale-105 active:scale-95 transition-all", likedSongs.length > 0 ? "bg-gradient-to-br from-secondary to-primary" : "bg-white/10 opacity-50 cursor-not-allowed")}
-             disabled={likedSongs.length === 0}
-           >
-             {isPlaying && currentSong && likedSongs.some(s => s.id === currentSong.id) ? <Pause className="w-8 h-8 fill-current" /> : <Play className="w-8 h-8 fill-current ml-1.5" />}
-           </button>
-        </div>
+      {/* Play Button Row — sits below hero, fully visible, no clipping */}
+      <div className="relative flex items-center justify-end px-8 -mt-8 mb-4 z-20">
+        <button 
+          onClick={handlePlayAll}
+          className={cn("w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center text-white shadow-[0_0_30px_rgba(236,72,153,0.6)] hover:scale-105 active:scale-95 transition-all", likedSongs.length > 0 ? "bg-gradient-to-br from-secondary to-primary" : "bg-white/10 opacity-50 cursor-not-allowed")}
+          disabled={likedSongs.length === 0}
+        >
+          {isPlaying && currentSong && likedSongs.some(s => s.id === currentSong.id) ? <Pause className="w-8 h-8 fill-current" /> : <Play className="w-8 h-8 fill-current ml-1.5" />}
+        </button>
       </div>
 
       {/* Main Content */}
-      <div className="px-4 md:px-10 pt-12 max-w-5xl animate-in slide-in-from-bottom-8 duration-500">
+      <div className="px-4 md:px-10 pt-4 max-w-5xl animate-in slide-in-from-bottom-8 duration-500">
+
         {likedSongs.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
              <Heart className="w-16 h-16 text-white/20 mb-4" />

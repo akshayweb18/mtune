@@ -46,9 +46,7 @@ body {
 main,
 aside,
 nav {
-  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
 }
 
 /* ─── GPU-accelerated glassmorphism ─── */

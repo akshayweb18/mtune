@@ -43,7 +43,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${inter.variable} antialiased h-screen overflow-hidden flex flex-col bg-[#050816] text-white`}
+        className={`${inter.variable} antialiased h-[100dvh] overflow-hidden flex flex-col bg-[#050816] text-white`}
       >
         <Providers>
           {/* Main layout */}
