@@ -64,20 +64,20 @@ export default function Home() {
 
   const { data: playlistData, isLoading } = useQuery({
     queryKey: ['featured-playlists-2024'],
-    queryFn: () => saavnApi.searchPlaylists('latest hindi 2024', 1, 10),
+    queryFn: () => saavnApi.searchPlaylists('top playlists', 1, 10),
   });
 
   const featuredPlaylists = playlistData?.results || [];
 
   const { data: mixData } = useQuery({
     queryKey: ['hero-mix-songs'],
-    queryFn: () => saavnApi.searchSongs('party mix', 1, 10),
+    queryFn: () => saavnApi.searchSongs('global top 50', 1, 10),
   });
   const heroSongs = mixData?.results || [];
 
   const { data: latestData, isLoading: latestLoading } = useQuery({
     queryKey: ['latest-songs-home'],
-    queryFn: () => saavnApi.searchSongs('latest hindi songs 2024', 1, 10),
+    queryFn: () => saavnApi.searchSongs('latest trending songs', 1, 10),
   });
 
   const latestSongs: Song[] = latestData?.results || [];

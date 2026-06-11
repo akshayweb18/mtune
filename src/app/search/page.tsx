@@ -12,15 +12,15 @@ import { AddToPlaylistModal } from '@/components/shared/AddToPlaylistModal';
 import { Song } from '@/types';
 
 const BROWSE_ALL = [
-  { title: 'Songs', searchTerm: 'Top Hindi Songs', color: 'from-pink-600 to-rose-500', icon: <Music className="w-6 h-6 text-white" /> },
-  { title: 'Artists', searchTerm: 'Popular Indian Artists', color: 'from-purple-600 to-violet-500', icon: <Mic2 className="w-6 h-6 text-white" /> },
-  { title: 'Albums', searchTerm: 'New Hindi Albums', color: 'from-orange-600 to-amber-500', icon: <Disc className="w-6 h-6 text-white" /> },
-  { title: 'Playlists', searchTerm: 'Best Bollywood Playlists', color: 'from-blue-600 to-sky-500', icon: <ListMusic className="w-6 h-6 text-white" /> },
-  { title: 'Genres', searchTerm: 'Romantic Hindi Songs', color: 'from-indigo-600 to-blue-500', icon: <Radio className="w-6 h-6 text-white" /> },
-  { title: 'Podcasts', searchTerm: 'Hindi Podcasts', color: 'from-teal-600 to-emerald-500', icon: <Podcast className="w-6 h-6 text-white" /> },
+  { title: 'Hindi Hits', searchTerm: 'Top Hindi Songs', color: 'from-pink-600 to-rose-500', icon: <Music className="w-6 h-6 text-white" /> },
+  { title: 'Global Top 50', searchTerm: 'Global Top 50 English', color: 'from-purple-600 to-violet-500', icon: <Music className="w-6 h-6 text-white" /> },
+  { title: 'Indian Artists', searchTerm: 'Popular Indian Artists', color: 'from-orange-600 to-amber-500', icon: <Mic2 className="w-6 h-6 text-white" /> },
+  { title: 'Pop Artists', searchTerm: 'Popular English Artists', color: 'from-blue-600 to-sky-500', icon: <Mic2 className="w-6 h-6 text-white" /> },
+  { title: 'Bollywood', searchTerm: 'Bollywood Playlists', color: 'from-indigo-600 to-blue-500', icon: <ListMusic className="w-6 h-6 text-white" /> },
+  { title: 'New Albums', searchTerm: 'Latest Albums', color: 'from-teal-600 to-emerald-500', icon: <Disc className="w-6 h-6 text-white" /> },
 ];
 
-const TRENDING_SEARCHES = ['Kesariya', 'Night Changes', 'Unstoppable', 'Husn', 'Heeriye', 'Tum Hi Ho', 'Apna Bana Le', 'Chaleya'];
+const TRENDING_SEARCHES = ['Kesariya', 'Shape of You', 'Husn', 'Blinding Lights', 'Arijit Singh', 'Taylor Swift', 'Apna Bana Le', 'Justin Bieber'];
 
 export default function SearchPage() {
   const [query, setQuery] = useState('');
