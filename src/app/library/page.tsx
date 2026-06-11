@@ -1,17 +1,22 @@
 'use client';
 
 import { useState } from 'react';
-import { Heart, Plus, ListMusic, Disc, Mic2, Play, MoreVertical, Clock } from 'lucide-react';
+import { Heart, Plus, ListMusic, Disc, Mic2, Play, MoreVertical, Clock, ListPlus } from 'lucide-react';
 import { useLibraryStore } from '@/store/useLibraryStore';
 import { usePlayerStore } from '@/store/usePlayerStore';
 import { cn } from '@/lib/utils';
 import { Song } from '@/types';
+import { AddToPlaylistModal } from '@/components/shared/AddToPlaylistModal';
+import { CreatePlaylistModal } from '@/components/shared/CreatePlaylistModal';
+import Link from 'next/link';
 
 const tabs = ['Liked Songs', 'History', 'Playlists', 'Artists'];
 
 export default function LibraryPage() {
   const [activeTab, setActiveTab] = useState('Liked Songs');
-  const { likedSongs, recentSongs } = useLibraryStore();
+  const [selectedSongForPlaylist, setSelectedSongForPlaylist] = useState<Song | null>(null);
+  const [isCreatePlaylistOpen, setIsCreatePlaylistOpen] = useState(false);
+  const { likedSongs, recentSongs, customPlaylists } = useLibraryStore();
   const { currentSong, isPlaying, togglePlay, setQueue, setCurrentSong } = usePlayerStore();
 
   const handlePlaySong = (song: Song, queue: Song[]) => {
@@ -84,9 +89,17 @@ export default function LibraryPage() {
                   </span>
                 </div>
               </div>
-              <button className="text-white/40 hover:text-white p-2 transition shrink-0 touch-sm" onClick={(e) => e.stopPropagation()}>
-                <MoreVertical className="w-5 h-5" />
-              </button>
+              <div className="flex items-center">
+                <button 
+                  className="text-white/40 hover:text-white p-2 transition shrink-0 touch-sm active:scale-90" 
+                  onClick={(e) => { e.stopPropagation(); setSelectedSongForPlaylist(song); }}
+                >
+                  <ListPlus className="w-5 h-5" />
+                </button>
+                <button className="text-white/40 hover:text-white p-2 transition shrink-0 touch-sm" onClick={(e) => e.stopPropagation()}>
+                  <MoreVertical className="w-5 h-5" />
+                </button>
+              </div>
             </div>
           );
         })}
@@ -165,15 +178,83 @@ export default function LibraryPage() {
         </div>
       )}
 
-      {(activeTab === 'Playlists' || activeTab === 'Artists' || activeTab === 'Albums') && (
+      {activeTab === 'Playlists' && (
+        <div className="animate-in fade-in duration-500">
+          <div className="flex items-center justify-between mb-4 px-2">
+            <h2 className="font-bold text-white text-lg">Your Playlists</h2>
+            <button 
+              onClick={() => setIsCreatePlaylistOpen(true)}
+              className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition active:scale-95"
+            >
+              <Plus className="w-5 h-5" />
+            </button>
+          </div>
+          
+          {customPlaylists.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16 text-center bg-white/5 rounded-2xl border border-white/5">
+              <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mb-4">
+                <ListMusic className="w-8 h-8 text-white/40" />
+              </div>
+              <h2 className="text-lg font-bold text-white mb-2">Create your first playlist</h2>
+              <p className="text-white/40 text-sm mb-6">It's easy, we'll help you.</p>
+              <button 
+                onClick={() => setIsCreatePlaylistOpen(true)}
+                className="px-6 py-2.5 bg-white text-black font-bold rounded-full text-sm hover:scale-105 transition"
+              >
+                Create playlist
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {customPlaylists.map(playlist => (
+                <Link 
+                  href={`/playlist/${playlist.id}`} 
+                  key={playlist.id}
+                  className="group bg-white/5 rounded-2xl p-4 hover:bg-white/10 transition border border-transparent hover:border-white/10"
+                >
+                  <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 shadow-lg bg-white/5 relative flex items-center justify-center">
+                    {playlist.songs.length > 0 ? (
+                      <div className="grid grid-cols-2 w-full h-full">
+                        {Array.from({ length: 4 }).map((_, i) => {
+                          const songImg = playlist.songs[i % playlist.songs.length]?.image?.[2]?.url 
+                                        || playlist.songs[i % playlist.songs.length]?.image?.[0]?.url;
+                          return (
+                            <img key={i} src={songImg} alt="" className="w-full h-full object-cover" />
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <ListMusic className="w-10 h-10 text-white/20" />
+                    )}
+                  </div>
+                  <h3 className="font-bold text-white truncate text-sm">{playlist.name}</h3>
+                  <p className="text-white/50 text-xs mt-1">{playlist.songs.length} songs</p>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {(activeTab === 'Artists' || activeTab === 'Albums') && (
         <div className="flex flex-col items-center justify-center py-20 text-center animate-in fade-in duration-500">
           <div className="w-20 h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-4">
-            {activeTab === 'Playlists' ? <ListMusic className="w-8 h-8 text-white/40" /> : activeTab === 'Albums' ? <Disc className="w-8 h-8 text-white/40" /> : <Mic2 className="w-8 h-8 text-white/40" />}
+            {activeTab === 'Albums' ? <Disc className="w-8 h-8 text-white/40" /> : <Mic2 className="w-8 h-8 text-white/40" />}
           </div>
           <h2 className="text-xl font-bold text-white mb-2">No {activeTab} yet</h2>
           <p className="text-white/40 text-sm">When you add {activeTab.toLowerCase()}, they'll appear here.</p>
         </div>
       )}
+
+      <AddToPlaylistModal 
+        isOpen={!!selectedSongForPlaylist} 
+        onClose={() => setSelectedSongForPlaylist(null)} 
+        song={selectedSongForPlaylist} 
+      />
+      <CreatePlaylistModal 
+        isOpen={isCreatePlaylistOpen} 
+        onClose={() => setIsCreatePlaylistOpen(false)} 
+      />
     </div>
   );
 }

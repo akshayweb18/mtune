@@ -4,34 +4,49 @@ import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { saavnApi } from '@/services/api';
 import { usePlayerStore } from '@/store/usePlayerStore';
-import { Play, Pause, Heart, MoreVertical, Clock, ListMusic } from 'lucide-react';
-import { Song } from '@/types';
+import { Play, Pause, Heart, MoreVertical, Clock, ListMusic, ListPlus, Trash2 } from 'lucide-react';
+import { Song, CustomPlaylist } from '@/types';
 import { cn } from '@/lib/utils';
 import { useLibraryStore } from '@/store/useLibraryStore';
+import { AddToPlaylistModal } from '@/components/shared/AddToPlaylistModal';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function PlaylistPage() {
   const { id } = useParams();
+  const router = useRouter();
   const { setCurrentSong, setQueue, currentSong, isPlaying, togglePlay } = usePlayerStore();
-  const { isLiked, toggleLike } = useLibraryStore();
+  const { isLiked, toggleLike, customPlaylists, removeSongFromPlaylist, deletePlaylist } = useLibraryStore();
+  const [selectedSongForPlaylist, setSelectedSongForPlaylist] = useState<Song | null>(null);
 
-  const { data: playlist, isLoading } = useQuery({
+  const isCustom = typeof id === 'string' && id.startsWith('custom_');
+  const customPlaylist = isCustom ? customPlaylists.find(p => p.id === id) : null;
+
+  const { data: apiPlaylist, isLoading: isApiLoading } = useQuery({
     queryKey: ['playlist', id],
     queryFn: () => saavnApi.getPlaylistDetails(id as string),
-    enabled: !!id,
+    enabled: !!id && !isCustom,
   });
+
+  const isLoading = isCustom ? false : isApiLoading;
+  const playlist = isCustom ? customPlaylist : apiPlaylist;
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-full bg-[#05050f]">
+      <div className="flex items-center justify-center h-full bg-[#05050f] min-h-[50vh]">
         <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin shadow-[0_0_15px_rgba(168,85,247,0.5)]" />
       </div>
     );
   }
 
-  if (!playlist) return <div className="p-8 text-white">Playlist not found</div>;
+  if (!playlist) return <div className="p-8 text-white flex justify-center py-20 text-xl font-bold">Playlist not found</div>;
 
   const songs: Song[] = playlist.songs || [];
-  const img = playlist.image?.[2]?.url || playlist.image?.[0]?.url;
+  
+  // Custom playlists might not have an image property directly on the playlist object
+  const img = isCustom 
+    ? (songs[0]?.image?.[2]?.url || songs[0]?.image?.[0]?.url || '') 
+    : (playlist as any).image?.[2]?.url || (playlist as any).image?.[0]?.url;
 
   const handlePlaySong = (song: Song, index: number) => {
     setCurrentSong(song);
@@ -41,6 +56,13 @@ export default function PlaylistPage() {
   const handlePlayAll = () => {
     if (songs.length > 0) {
       handlePlaySong(songs[0], 0);
+    }
+  };
+
+  const handleDeletePlaylist = () => {
+    if (isCustom && typeof id === 'string') {
+      deletePlaylist(id);
+      router.push('/library');
     }
   };
 
@@ -67,14 +89,26 @@ export default function PlaylistPage() {
              )}
           </div>
           <div className="flex flex-col flex-1 pb-2">
-            <span className="text-white/80 font-bold uppercase tracking-widest text-xs md:text-sm mb-2 drop-shadow-md">Playlist</span>
+            <span className="text-white/80 font-bold uppercase tracking-widest text-xs md:text-sm mb-2 drop-shadow-md">
+              {isCustom ? 'Custom Playlist' : 'Playlist'}
+            </span>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white drop-shadow-lg tracking-tight mb-4 line-clamp-2">
               {playlist.name}
             </h1>
             <p className="text-white/60 text-sm md:text-base font-medium flex items-center gap-2 flex-wrap">
-               <span className="text-white font-bold">Akshay Music</span>
-               • {playlist.songCount || songs.length} songs
+               <span className="text-white font-bold">{isCustom ? 'You' : 'Akshay Music'}</span>
+               • {(playlist as any).songCount || songs.length} songs
             </p>
+            {isCustom && (
+              <div className="mt-4 flex">
+                <button 
+                  onClick={handleDeletePlaylist}
+                  className="px-4 py-2 bg-white/10 hover:bg-red-500/80 text-white rounded-full text-sm font-bold backdrop-blur-md border border-white/20 transition flex items-center gap-2"
+                >
+                  <Trash2 className="w-4 h-4" /> Delete Playlist
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -136,16 +170,38 @@ export default function PlaylistPage() {
                     </p>
                   </div>
 
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); toggleLike(song); }}
-                    className="shrink-0 p-2 text-white/40 hover:text-white hover:scale-110 transition-all mr-2"
-                  >
-                    <Heart className={cn("w-5 h-5 transition-colors", isLikedSong ? "fill-secondary text-secondary drop-shadow-[0_0_10px_rgba(236,72,153,0.6)]" : "")} />
-                  </button>
+                  <div className="flex items-center shrink-0">
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); toggleLike(song); }}
+                      className="p-2 text-white/40 hover:text-white hover:scale-110 transition-all"
+                    >
+                      <Heart className={cn("w-5 h-5 transition-colors", isLikedSong ? "fill-secondary text-secondary drop-shadow-[0_0_10px_rgba(236,72,153,0.6)]" : "")} />
+                    </button>
 
-                  <button className="shrink-0 p-2 text-white/40 hover:text-white md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-sm">
-                    <MoreVertical className="w-5 h-5" />
-                  </button>
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); setSelectedSongForPlaylist(song); }}
+                      className="p-2 text-white/40 hover:text-white transition touch-sm hidden md:block"
+                    >
+                      <ListPlus className="w-5 h-5" />
+                    </button>
+
+                    {isCustom ? (
+                      <button 
+                        onClick={(e) => { 
+                          e.stopPropagation(); 
+                          removeSongFromPlaylist(id as string, song.id); 
+                        }}
+                        className="p-2 text-white/40 hover:text-red-400 transition touch-sm"
+                        title="Remove from playlist"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    ) : (
+                      <button className="p-2 text-white/40 hover:text-white transition touch-sm md:opacity-0 md:group-hover:opacity-100">
+                        <MoreVertical className="w-5 h-5" />
+                      </button>
+                    )}
+                  </div>
 
                   <div className="w-16 text-right hidden md:flex items-center justify-end text-xs text-white/40 font-medium">
                     {Math.floor((song.duration || 0) / 60)}:{String((song.duration || 0) % 60).padStart(2, '0')}
@@ -156,6 +212,12 @@ export default function PlaylistPage() {
           </div>
         </div>
       </div>
+
+      <AddToPlaylistModal 
+        isOpen={!!selectedSongForPlaylist} 
+        onClose={() => setSelectedSongForPlaylist(null)} 
+        song={selectedSongForPlaylist} 
+      />
     </div>
   );
 }

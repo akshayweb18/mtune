@@ -4,10 +4,12 @@ import { useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { saavnApi } from '@/services/api';
 import { useDebounce } from '@/hooks/useDebounce';
-import { Search as SearchIcon, Mic, X, MoreVertical, Music, Mic2, Disc, ListMusic, Radio, Podcast, Play, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { Search as SearchIcon, Mic, X, MoreVertical, Music, Mic2, Disc, ListMusic, Radio, Podcast, Play, ChevronRight, CheckCircle2, ListPlus } from 'lucide-react';
 import { usePlayerStore } from '@/store/usePlayerStore';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { AddToPlaylistModal } from '@/components/shared/AddToPlaylistModal';
+import { Song } from '@/types';
 
 const BROWSE_ALL = [
   { title: 'Songs', searchTerm: 'Top Hindi Songs', color: 'from-pink-600 to-rose-500', icon: <Music className="w-6 h-6 text-white" /> },
@@ -22,6 +24,7 @@ const TRENDING_SEARCHES = ['Kesariya', 'Night Changes', 'Unstoppable', 'Husn', '
 
 export default function SearchPage() {
   const [query, setQuery] = useState('');
+  const [selectedSongForPlaylist, setSelectedSongForPlaylist] = useState<Song | null>(null);
   const debouncedQuery = useDebounce(query, 400);
   const router = useRouter();
   const setCurrentSong = usePlayerStore((s) => s.setCurrentSong);
@@ -177,9 +180,17 @@ export default function SearchPage() {
                             <h4 className="text-[14px] font-bold text-white truncate">{song.title}</h4>
                             <span className="text-[12px] text-white/50 truncate mt-0.5">{song.description || song.subtitle || 'Song'}</span>
                           </div>
-                          <button className="p-2 text-white/40 hover:text-white touch-sm shrink-0">
-                            <MoreVertical className="w-5 h-5" />
-                          </button>
+                          <div className="flex items-center">
+                            <button 
+                              className="p-2 text-white/40 hover:text-white touch-sm shrink-0 active:scale-90"
+                              onClick={(e) => { e.stopPropagation(); setSelectedSongForPlaylist(song); }}
+                            >
+                              <ListPlus className="w-5 h-5" />
+                            </button>
+                            <button className="p-2 text-white/40 hover:text-white touch-sm shrink-0">
+                              <MoreVertical className="w-5 h-5" />
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -299,6 +310,12 @@ export default function SearchPage() {
           </div>
         )}
       </div>
+      
+      <AddToPlaylistModal 
+        isOpen={!!selectedSongForPlaylist} 
+        onClose={() => setSelectedSongForPlaylist(null)} 
+        song={selectedSongForPlaylist} 
+      />
     </div>
   );
 }

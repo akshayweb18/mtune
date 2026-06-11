@@ -4,14 +4,17 @@ import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { saavnApi } from '@/services/api';
 import { usePlayerStore } from '@/store/usePlayerStore';
-import { Play, Pause, Heart, MoreVertical, ChevronLeft, CheckCircle2 } from 'lucide-react';
+import { Play, Pause, Heart, MoreVertical, ChevronLeft, CheckCircle2, ListPlus } from 'lucide-react';
 import Link from 'next/link';
 import { Song } from '@/types';
 import { cn } from '@/lib/utils';
+import { AddToPlaylistModal } from '@/components/shared/AddToPlaylistModal';
+import { useState } from 'react';
 
 export default function ArtistPage() {
   const { id } = useParams();
   const { setCurrentSong, setQueue, currentSong, isPlaying, togglePlay } = usePlayerStore();
+  const [selectedSongForPlaylist, setSelectedSongForPlaylist] = useState<Song | null>(null);
 
   const { data: artist, isLoading: artistLoading } = useQuery({
     queryKey: ['artist', id],
@@ -153,9 +156,15 @@ export default function ArtistPage() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-3 md:gap-4 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
-                  <button className="p-2 -mr-1 touch-sm text-white/40 hover:text-white transition-colors">
+                <div className="flex items-center gap-1 md:gap-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                  <button className="p-2 touch-sm text-white/40 hover:text-white transition-colors">
                     <Heart className="w-5 h-5" />
+                  </button>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); setSelectedSongForPlaylist(song); }}
+                    className="p-2 touch-sm text-white/40 hover:text-white transition-colors hidden md:block"
+                  >
+                    <ListPlus className="w-5 h-5" />
                   </button>
                   <button className="p-2 touch-sm text-white/40 hover:text-white transition-colors">
                     <MoreVertical className="w-5 h-5" />
@@ -167,6 +176,11 @@ export default function ArtistPage() {
         </div>
       </div>
 
+      <AddToPlaylistModal 
+        isOpen={!!selectedSongForPlaylist} 
+        onClose={() => setSelectedSongForPlaylist(null)} 
+        song={selectedSongForPlaylist} 
+      />
     </div>
   );
 }

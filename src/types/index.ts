@@ -100,3 +100,10 @@ export interface SearchResult {
     position: number;
   };
 }
+
+export interface CustomPlaylist {
+  id: string;
+  name: string;
+  createdAt: number;
+  songs: Song[];
+}

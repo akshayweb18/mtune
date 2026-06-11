@@ -6,6 +6,8 @@ import { cn } from '@/lib/utils';
 import { Home, Search, Compass, ListMusic, Heart, History, Plus, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { AiMoodMixModal } from '@/components/shared/AiMoodMixModal';
+import { CreatePlaylistModal } from '@/components/shared/CreatePlaylistModal';
+import { useLibraryStore } from '@/store/useLibraryStore';
 
 const mainLinks = [
   { name: 'Home', href: '/', icon: Home },
@@ -22,6 +24,8 @@ const libraryLinks = [
 export function Sidebar() {
   const pathname = usePathname();
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+  const [isCreatePlaylistOpen, setIsCreatePlaylistOpen] = useState(false);
+  const customPlaylists = useLibraryStore(s => s.customPlaylists);
 
   return (
     <>
@@ -63,7 +67,10 @@ export function Sidebar() {
         <div className="flex-1 overflow-y-auto scrollbar-hide flex flex-col gap-2">
           <div className="flex items-center justify-between px-2 mb-2">
             <span className="text-xs font-bold text-white/40 uppercase tracking-wider">Your Library</span>
-            <button className="text-white/40 hover:text-white p-1 rounded-full transition hover:bg-white/10">
+            <button 
+              onClick={() => setIsCreatePlaylistOpen(true)}
+              className="text-white/40 hover:text-white p-1 rounded-full transition hover:bg-white/10"
+            >
               <Plus className="w-4 h-4" />
             </button>
           </div>
@@ -91,6 +98,37 @@ export function Sidebar() {
                 </Link>
               );
             })}
+
+            {/* Custom Playlists */}
+            {customPlaylists.map((playlist) => {
+              const href = `/playlist/${playlist.id}`;
+              const isActive = pathname === href;
+              return (
+                <Link 
+                  key={playlist.id} 
+                  href={href}
+                  className={cn(
+                    "flex items-center gap-3 px-2 py-2 rounded-xl transition duration-200 text-sm group",
+                    isActive ? "bg-white/10" : "hover:bg-white/5"
+                  )}
+                >
+                  <div className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center overflow-hidden shrink-0 transition-transform group-hover:scale-105">
+                    {playlist.songs.length > 0 ? (
+                      <img 
+                        src={playlist.songs[0].image?.[2]?.url || playlist.songs[0].image?.[0]?.url} 
+                        alt={playlist.name} 
+                        className="w-full h-full object-cover" 
+                      />
+                    ) : (
+                      <ListMusic className="w-4 h-4 text-white/50" />
+                    )}
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className={cn("truncate font-medium transition-colors", isActive ? "text-white" : "text-white/70 group-hover:text-white")}>{playlist.name}</span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
 
@@ -114,6 +152,7 @@ export function Sidebar() {
       </aside>
 
       <AiMoodMixModal isOpen={isAiModalOpen} onClose={() => setIsAiModalOpen(false)} />
+      <CreatePlaylistModal isOpen={isCreatePlaylistOpen} onClose={() => setIsCreatePlaylistOpen(false)} />
     </>
   );
 }

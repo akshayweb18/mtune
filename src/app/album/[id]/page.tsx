@@ -4,15 +4,18 @@ import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { saavnApi } from '@/services/api';
 import { usePlayerStore } from '@/store/usePlayerStore';
-import { Play, Pause, Heart, MoreVertical, Clock, Disc } from 'lucide-react';
+import { Play, Pause, Heart, MoreVertical, Clock, Disc, ListPlus } from 'lucide-react';
 import { Song } from '@/types';
 import { cn } from '@/lib/utils';
 import { useLibraryStore } from '@/store/useLibraryStore';
+import { AddToPlaylistModal } from '@/components/shared/AddToPlaylistModal';
+import { useState } from 'react';
 
 export default function AlbumPage() {
   const { id } = useParams();
   const { setCurrentSong, setQueue, currentSong, isPlaying, togglePlay } = usePlayerStore();
   const { isLiked, toggleLike } = useLibraryStore();
+  const [selectedSongForPlaylist, setSelectedSongForPlaylist] = useState<Song | null>(null);
 
   const { data: album, isLoading } = useQuery({
     queryKey: ['album', id],
@@ -138,16 +141,25 @@ export default function AlbumPage() {
                     </p>
                   </div>
 
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); toggleLike(song); }}
-                    className="shrink-0 p-2 text-white/40 hover:text-white hover:scale-110 transition-all mr-2"
-                  >
-                    <Heart className={cn("w-5 h-5 transition-colors", isLikedSong ? "fill-secondary text-secondary drop-shadow-[0_0_10px_rgba(236,72,153,0.6)]" : "")} />
-                  </button>
+                  <div className="flex items-center shrink-0">
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); toggleLike(song); }}
+                      className="p-2 text-white/40 hover:text-white hover:scale-110 transition-all"
+                    >
+                      <Heart className={cn("w-5 h-5 transition-colors", isLikedSong ? "fill-secondary text-secondary drop-shadow-[0_0_10px_rgba(236,72,153,0.6)]" : "")} />
+                    </button>
 
-                  <button className="shrink-0 p-2 text-white/40 hover:text-white md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-sm">
-                    <MoreVertical className="w-5 h-5" />
-                  </button>
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); setSelectedSongForPlaylist(song); }}
+                      className="p-2 text-white/40 hover:text-white transition touch-sm hidden md:block"
+                    >
+                      <ListPlus className="w-5 h-5" />
+                    </button>
+
+                    <button className="p-2 text-white/40 hover:text-white md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-sm">
+                      <MoreVertical className="w-5 h-5" />
+                    </button>
+                  </div>
 
                   <div className="w-16 text-right hidden md:flex items-center justify-end text-xs text-white/40 font-medium">
                     {Math.floor((song.duration || 0) / 60)}:{String((song.duration || 0) % 60).padStart(2, '0')}
@@ -158,6 +170,12 @@ export default function AlbumPage() {
           </div>
         </div>
       </div>
+      
+      <AddToPlaylistModal 
+        isOpen={!!selectedSongForPlaylist} 
+        onClose={() => setSelectedSongForPlaylist(null)} 
+        song={selectedSongForPlaylist} 
+      />
     </div>
   );
 }
