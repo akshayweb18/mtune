@@ -51,8 +51,8 @@ export default function RootLayout({
             {/* Desktop Sidebar */}
             <Sidebar />
             
-            {/* Main Content Area — bottom padding for mobile player stack */}
-            <main className="flex-1 h-full overflow-y-auto relative pb-[120px] md:pb-20">
+            {/* Main Content Area — mobile: 148px + safe area, desktop: 72px */}
+            <main className="flex-1 h-full overflow-y-auto relative pb-[148px] md:pb-[72px]">
               {children}
             </main>
             

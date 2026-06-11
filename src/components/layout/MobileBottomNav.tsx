@@ -21,7 +21,7 @@ export function MobileBottomNav() {
   if (isExpanded) return null;
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 h-[70px] bg-[#0A0A10] border-t border-white/5 flex items-center justify-around pb-safe z-50">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0A0A10] border-t border-white/5 flex items-start justify-around pt-2 z-50 pb-safe" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 8px), 8px)', height: 'calc(70px + max(env(safe-area-inset-bottom, 0px), 0px))' }}>
       {navItems.map((item) => {
         const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
         

@@ -17,13 +17,14 @@
   --primary: #A855F7;
   --secondary: #EC4899;
   --accent: #22D3EE;
+  --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --nav-height: 64px;
-  --mini-player-height: 56px;
+  --nav-height: 70px;
+  --mini-player-height: 64px;
 }
 
 /* ─── GPU-accelerated base ─── */
-* {
+*, *::before, *::after {
   -webkit-tap-highlight-color: transparent;
   box-sizing: border-box;
 }
@@ -33,6 +34,8 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  overflow: hidden;
+  height: 100%;
 }
 
 body {
@@ -40,19 +43,21 @@ body {
   color: var(--foreground);
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
+  height: 100%;
+  overscroll-behavior: none;
 }
 
 /* ─── Smooth scrolling containers ─── */
-main,
-aside,
-nav {
+main, aside, nav {
   -webkit-overflow-scrolling: touch;
 }
 
-/* ─── GPU-accelerated glassmorphism ─── */
+/* ─── Glassmorphism ─── */
 .glass {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .glass-panel {
@@ -61,130 +66,127 @@ nav {
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
 }
 
-/* ─── Smooth image loading ─── */
+/* ─── Images ─── */
 img {
   content-visibility: auto;
   image-rendering: -webkit-optimize-contrast;
 }
 
-/* Removed img fadeIn animation — it re-triggers on every React re-render and causes jank */
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* ─── Custom scrollbar — desktop only ─── */
+@media (min-width: 768px) {
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
 }
 
-/* ─── Custom scrollbar ─── */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+/* ─── Hide scrollbar on mobile ─── */
+@media (max-width: 767px) {
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; }
 }
 
-/* ─── Smooth hover transitions — only color + transform (NOT all) ─── */
+/* ─── Smooth transitions — targeted only ─── */
 a, button, [role="button"] {
-  transition: color 0.2s ease, transform 0.15s ease, opacity 0.2s ease;
+  transition: color 0.15s ease, transform 0.12s ease, opacity 0.15s ease;
 }
 
-/* ─── Hide scrollbar on mobile carousels ─── */
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
+/* ─── Scrollbar hide utility ─── */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* ─── Snap scroll for carousels ─── */
+/* ─── Snap scroll ─── */
 .snap-x {
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
+  scroll-padding-left: 16px;
 }
-.snap-start {
-  scroll-snap-align: start;
+.snap-start { scroll-snap-align: start; }
+
+/* ─── Shimmer skeleton loading ─── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.09) 50%,
+    rgba(255,255,255,0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }
 
-/* ─── Marquee animation for long titles ─── */
+/* ─── Marquee animation ─── */
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+.animate-marquee { animation: marquee 8s linear infinite; }
 
-.animate-marquee {
-  animation: marquee 8s linear infinite;
-}
-
-/* ─── Equalizer animation (GPU accelerated) ─── */
-@keyframes equalizer {
-  0%, 100% { height: 4px; }
-  50% { height: 16px; }
-}
-
+/* ─── Equalizer animation ─── */
 @keyframes eq-bar {
   0%, 100% { transform: scaleY(0.3); }
   50% { transform: scaleY(1); }
 }
 
-/* ─── Blob animation for backgrounds ─── */
+/* ─── Blob animation ─── */
 @keyframes blob {
   0% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(20px, -30px) scale(1.1); }
   66% { transform: translate(-15px, 15px) scale(0.9); }
   100% { transform: translate(0, 0) scale(1); }
 }
+.animate-blob { animation: blob 7s infinite ease-in-out; }
 
-.animate-blob {
-  animation: blob 7s infinite ease-in-out;
-}
-
-/* ─── Spin slow for album art ─── */
+/* ─── Spin slow ─── */
 @keyframes spin-slow {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+.animate-spin-slow { animation: spin-slow 15s linear infinite; }
 
-.animate-spin-slow {
-  animation: spin-slow 15s linear infinite;
-}
-
-/* ─── Pulse glow for active indicators ─── */
+/* ─── Pulse glow ─── */
 @keyframes pulse-glow {
   0%, 100% { box-shadow: 0 0 4px rgba(168, 85, 247, 0.4); }
   50% { box-shadow: 0 0 12px rgba(168, 85, 247, 0.8); }
 }
 
-/* ─── Mobile safe area padding helper ─── */
-.pb-safe {
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+/* ─── Fade in ─── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
+.animate-fade-in { animation: fadeIn 0.3s ease forwards; }
 
-/* ─── Mobile touch targets ─── */
+/* ─── Safe area utilities ─── */
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+.pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+.mt-safe { margin-top: env(safe-area-inset-top, 0px); }
+
+/* ─── Mobile touch targets — strict minimum ─── */
 @media (max-width: 767px) {
-  ::-webkit-scrollbar {
-    display: none;
+  button, a[href], [role="button"] {
+    min-height: 40px;
+    min-width: 40px;
   }
-  
-  * {
-    scrollbar-width: none;
-  }
-  
-  /* Ensure minimum touch target */
-  button, a, [role="button"] {
-    min-height: 36px;
-    min-width: 36px;
+  /* Override for icon-only tiny buttons */
+  button.touch-sm, a.touch-sm {
+    min-height: 32px;
+    min-width: 32px;
   }
 }
 
-/* ─── Reduced motion for accessibility ─── */
+/* ─── Mobile overscroll ─── */
+@media (max-width: 767px) {
+  main {
+    overscroll-behavior-y: contain;
+  }
+}
+
+/* ─── Reduced motion ─── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

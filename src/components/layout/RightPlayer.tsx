@@ -11,7 +11,7 @@ export function RightPlayer() {
 
   if (!currentSong) {
     return (
-      <aside className="hidden xl:flex flex-col w-[340px] h-full bg-[#05050f] border-l border-white/5 p-6 pb-[100px] shrink-0">
+      <aside className="hidden xl:flex flex-col w-[340px] h-full bg-[#05050f] border-l border-white/5 p-6 pb-[72px] shrink-0">
         <div className="flex-1 flex flex-col items-center justify-center text-center opacity-50">
           <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
             <Music className="w-8 h-8 text-white" />
@@ -35,7 +35,7 @@ export function RightPlayer() {
   };
 
   return (
-    <aside className="hidden xl:flex flex-col w-[340px] h-full bg-[#05050f] border-l border-white/5 overflow-y-auto pb-[100px] shrink-0">
+    <aside className="hidden xl:flex flex-col w-[340px] h-full bg-[#05050f] border-l border-white/5 overflow-y-auto pb-[72px] shrink-0">
       
       {/* Immersive header area */}
       <div className="p-6 pb-0 flex justify-between items-center relative z-10">

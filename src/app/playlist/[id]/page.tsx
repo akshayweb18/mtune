@@ -45,7 +45,7 @@ export default function PlaylistPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-full bg-[#05050f] pb-[120px]">
+    <div className="flex flex-col min-h-full">
       {/* Immersive Hero Header */}
       <div className="relative w-full h-[45vh] min-h-[350px] flex items-end p-6 md:p-10 z-10 overflow-hidden">
         {/* Background Image (Optimized: removed blur-2xl) */}
@@ -108,7 +108,7 @@ export default function PlaylistPage() {
                 <div 
                   key={song.id}
                   onClick={() => handlePlaySong(song, index)}
-                  className="flex items-center p-2 md:p-3 rounded-xl hover:bg-white/5 transition-colors group cursor-pointer"
+                  className="flex items-center p-2 md:p-3 rounded-xl hover:bg-white/5 active:scale-95 transition-all group cursor-pointer"
                 >
                   <div className="w-8 flex justify-center shrink-0 text-white/50 text-sm font-bold">
                     {isActive && isPlaying ? (
@@ -143,7 +143,7 @@ export default function PlaylistPage() {
                     <Heart className={cn("w-5 h-5 transition-colors", isLikedSong ? "fill-secondary text-secondary drop-shadow-[0_0_10px_rgba(236,72,153,0.6)]" : "")} />
                   </button>
 
-                  <button className="shrink-0 p-2 text-white/40 hover:text-white md:hidden opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button className="shrink-0 p-2 text-white/40 hover:text-white md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-sm">
                     <MoreVertical className="w-5 h-5" />
                   </button>
 

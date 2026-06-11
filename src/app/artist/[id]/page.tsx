@@ -55,7 +55,7 @@ export default function ArtistPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-full bg-[#05050f] pb-[120px]">
+    <div className="flex flex-col min-h-full">
       
       {/* Immersive Hero Header */}
       <div className="relative w-full h-[45vh] md:h-[50vh] min-h-[350px]">
@@ -120,7 +120,7 @@ export default function ArtistPage() {
               <div 
                 key={song.id}
                 onClick={() => handlePlaySong(song, index)}
-                className="flex items-center gap-4 p-2 md:p-3 rounded-xl hover:bg-white/5 transition-colors group cursor-pointer"
+                className="flex items-center gap-3 md:gap-4 p-2 md:p-3 rounded-xl hover:bg-white/5 active:scale-95 transition-all group cursor-pointer"
               >
                 {/* Number or EQ */}
                 <div className="w-8 flex justify-center shrink-0 text-white/50 text-sm font-bold">
@@ -153,9 +153,13 @@ export default function ArtistPage() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Heart className="w-5 h-5 text-white/40 hover:text-white transition-colors" />
-                  <MoreVertical className="w-5 h-5 text-white/40 hover:text-white transition-colors" />
+                <div className="flex items-center gap-3 md:gap-4 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                  <button className="p-2 -mr-1 touch-sm text-white/40 hover:text-white transition-colors">
+                    <Heart className="w-5 h-5" />
+                  </button>
+                  <button className="p-2 touch-sm text-white/40 hover:text-white transition-colors">
+                    <MoreVertical className="w-5 h-5" />
+                  </button>
                 </div>
               </div>
             );

@@ -39,7 +39,7 @@ export default function NewReleasesPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-[#05050f] pb-[120px]">
+    <div className="flex flex-col min-h-full">
       
       {/* Immersive Hero */}
       <div className="relative w-full h-[40vh] min-h-[300px] flex items-end p-6 md:p-10 z-10 overflow-hidden">

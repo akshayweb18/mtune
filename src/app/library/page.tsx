@@ -49,7 +49,7 @@ export default function LibraryPage() {
     }
 
     return (
-      <div className="flex flex-col gap-2 animate-in fade-in duration-500 mt-4">
+      <div className="flex flex-col gap-2 animate-in fade-in duration-500 mt-2">
         {songs.map((song, index) => {
           const isCurrentSong = currentSong?.id === song.id;
 
@@ -58,13 +58,13 @@ export default function LibraryPage() {
               key={`${song.id}-${index}`}
               onClick={() => handlePlaySong(song, songs)}
               className={cn(
-                "flex items-center justify-between p-2 rounded-xl group hover:bg-white/5 transition-colors cursor-pointer",
-                isCurrentSong && "bg-white/5"
+                "flex items-center justify-between p-2.5 rounded-xl group hover:bg-white/5 active:scale-95 transition-all cursor-pointer border border-transparent",
+                isCurrentSong ? "bg-white/10 border-white/10" : ""
               )}
             >
-              <div className="flex items-center gap-4 flex-1 overflow-hidden">
+              <div className="flex items-center gap-3.5 flex-1 min-w-0">
                 <div className="relative w-12 h-12 rounded-lg overflow-hidden shrink-0 shadow-md">
-                  <img src={song.image[2]?.url || song.image[1]?.url || song.image[0]?.url} alt={song.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <img src={song.image[2]?.url || song.image[1]?.url || song.image[0]?.url} alt={song.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                   <div className={cn(
                     "absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity",
                     isCurrentSong ? "opacity-100" : "opacity-0 group-hover:opacity-100"
@@ -72,19 +72,19 @@ export default function LibraryPage() {
                     <Play className={cn("w-4 h-4 fill-white text-white", isCurrentSong && isPlaying && "animate-pulse")} />
                   </div>
                 </div>
-                <div className="flex flex-col flex-1 overflow-hidden">
+                <div className="flex flex-col flex-1 min-w-0 pr-2">
                   <span className={cn(
-                    "text-[15px] font-bold truncate transition-colors",
-                    isCurrentSong ? "text-primary" : "text-white group-hover:text-primary"
+                    "text-[14px] font-bold truncate transition-colors",
+                    isCurrentSong ? "text-primary" : "text-white"
                   )}>
                     {song.name.replace(/&quot;/g, '"').replace(/&amp;/g, '&')}
                   </span>
-                  <span className="text-xs text-white/50 font-medium mt-0.5 truncate">
+                  <span className="text-[12px] text-white/50 font-medium mt-0.5 truncate">
                     {song.artists?.primary?.map(a => a.name).join(', ')}
                   </span>
                 </div>
               </div>
-              <button className="text-white/40 hover:text-white p-2 transition shrink-0 ml-2" onClick={(e) => e.stopPropagation()}>
+              <button className="text-white/40 hover:text-white p-2 transition shrink-0 touch-sm" onClick={(e) => e.stopPropagation()}>
                 <MoreVertical className="w-5 h-5" />
               </button>
             </div>
@@ -95,18 +95,18 @@ export default function LibraryPage() {
   };
 
   return (
-    <div className="p-4 md:p-8 max-w-4xl mx-auto pb-[120px] bg-[#05050f] min-h-full">
+    <div className="flex flex-col pt-safe px-4 md:px-8 max-w-4xl mx-auto min-h-full pb-6" style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 16px)' }}>
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-6 pt-2 md:pt-0">
-        <h1 className="text-2xl font-bold text-white tracking-tight">Your Library</h1>
-        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center overflow-hidden border border-white/20 shadow-[0_0_15px_rgba(168,85,247,0.4)]">
+      <div className="flex items-center justify-between mb-5 pt-2">
+        <h1 className="text-[22px] md:text-2xl font-extrabold text-white tracking-tight">Your Library</h1>
+        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center overflow-hidden border-2 border-primary/40 shadow-[0_0_12px_rgba(168,85,247,0.4)]">
           <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Profile" className="w-full h-full object-cover" />
         </div>
       </div>
 
       {/* Tabs / Pills */}
-      <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide snap-x">
+      <div className="flex gap-2.5 mb-6 overflow-x-auto pb-2 scrollbar-hide snap-x -mx-4 px-4 md:mx-0 md:px-0">
         {tabs.map((tab) => {
           const isActive = activeTab === tab;
           return (
@@ -114,10 +114,10 @@ export default function LibraryPage() {
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={cn(
-                "px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap snap-start transition-all shadow-md border",
+                "px-4 py-2 rounded-full text-[13px] font-bold whitespace-nowrap snap-start transition-all",
                 isActive
-                  ? "bg-gradient-to-r from-primary to-secondary text-white border-transparent shadow-[0_0_12px_rgba(168,85,247,0.4)] scale-105"
-                  : "bg-white/5 text-white/70 border-white/10 hover:bg-white/10 hover:text-white"
+                  ? "bg-gradient-to-r from-primary to-secondary text-white shadow-[0_4px_12px_rgba(168,85,247,0.4)]"
+                  : "bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white"
               )}
             >
               {tab}
