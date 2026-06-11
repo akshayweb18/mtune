@@ -43,21 +43,25 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${inter.variable} antialiased h-[100dvh] overflow-hidden flex flex-col bg-[#050816] text-white`}
+        className={`${inter.variable} antialiased min-h-[100dvh] flex flex-col bg-[#050816] text-white`}
       >
         <Providers>
           {/* Main layout */}
-          <div className="flex w-full overflow-hidden h-full">
+          <div className="flex w-full flex-1 relative">
             {/* Desktop Sidebar */}
-            <Sidebar />
+            <div className="hidden md:block sticky top-0 h-[100dvh] z-10 shrink-0">
+              <Sidebar />
+            </div>
             
-            {/* Main Content Area — mobile: 148px + safe area, desktop: 72px */}
-            <main className="flex-1 h-full overflow-y-auto relative pb-[148px] md:pb-[72px]">
+            {/* Main Content Area */}
+            <main className="flex-1 w-full pb-[148px] md:pb-[72px]">
               {children}
             </main>
             
             {/* Desktop Right Player Sidebar */}
-            <RightPlayer />
+            <div className="hidden lg:block sticky top-0 h-[100dvh] z-10 shrink-0">
+              <RightPlayer />
+            </div>
           </div>
 
           {/* Desktop Bottom Player Bar */}

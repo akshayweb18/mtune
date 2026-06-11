@@ -40,10 +40,6 @@ export function MobileBottomNav() {
                     : "text-white/40 group-hover:text-white/70"
                 )} 
               />
-              {/* Glowing dot for active state matching mockup */}
-              {isActive && (
-                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-secondary shadow-[0_0_8px_rgba(236,72,153,1)]"></div>
-              )}
             </div>
             <span 
               className={cn(
