@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { Suspense, useState, useCallback, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { saavnApi } from '@/services/api';
 import { useDebounce } from '@/hooks/useDebounce';
 import { Search as SearchIcon, Mic, X, MoreVertical, Music, Mic2, Disc, ListMusic, Radio, Podcast, Play, ChevronRight, CheckCircle2, ListPlus } from 'lucide-react';
 import { usePlayerStore } from '@/store/usePlayerStore';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { AddToPlaylistModal } from '@/components/shared/AddToPlaylistModal';
 import { Song } from '@/types';
 
@@ -22,11 +22,19 @@ const BROWSE_ALL = [
 
 const TRENDING_SEARCHES = ['Kesariya', 'Shape of You', 'Husn', 'Blinding Lights', 'Arijit Singh', 'Taylor Swift', 'Apna Bana Le', 'Justin Bieber'];
 
-export default function SearchPage() {
-  const [query, setQuery] = useState('');
+function SearchContent() {
+  const searchParams = useSearchParams();
+  const initialQuery = searchParams.get('q') || '';
+  const [query, setQuery] = useState(initialQuery);
   const [selectedSongForPlaylist, setSelectedSongForPlaylist] = useState<Song | null>(null);
   const debouncedQuery = useDebounce(query, 400);
   const router = useRouter();
+
+  // Sync initial query if it changes in URL
+  useEffect(() => {
+    const q = searchParams.get('q');
+    if (q) setQuery(q);
+  }, [searchParams]);
   const setCurrentSong = usePlayerStore((s) => s.setCurrentSong);
   const setQueue = usePlayerStore((s) => s.setQueue);
 
@@ -64,80 +72,70 @@ export default function SearchPage() {
   );
 
   return (
-    <div className="flex flex-col pt-safe px-4 md:px-8 max-w-4xl mx-auto pb-6" style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 16px)' }}>
+    <div className="flex flex-col" style={{ paddingTop: 'max(env(safe-area-inset-top, 16px), 16px)' }}>
       {/* Sticky Header with Search Bar */}
-      <div className="sticky top-0 z-20 bg-background/90 backdrop-blur-md pt-2 pb-5">
-        <div className="flex items-center gap-4 mb-4">
-          <h1 className="text-[22px] md:text-2xl font-extrabold text-white tracking-tight">Search</h1>
-        </div>
-
+      <div className="sticky top-0 z-20 bg-[#121212] px-4 md:px-8 pt-4 pb-4">
+        <h1 className="text-[22px] md:text-[26px] font-black text-white tracking-tight mb-4">Search</h1>
         <div className="relative">
           <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-            <SearchIcon className="w-4 h-4 text-white/40" />
+            <SearchIcon className="w-5 h-5 text-black" />
           </div>
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="What do you want to listen to?"
-            className="w-full h-12 pl-11 pr-12 rounded-full bg-white/10 border border-white/10 text-white text-[15px] font-medium placeholder:text-white/40 focus:outline-none focus:border-white/20 focus:bg-white/15 transition-all shadow-md"
+            placeholder="What do you want to play?"
+            className="w-full h-12 pl-12 pr-12 rounded-full bg-white text-black text-[15px] font-medium placeholder:text-[#737373] focus:outline-none focus:ring-2 focus:ring-white/40 transition-all"
           />
           {query ? (
             <button
               onClick={() => setQuery('')}
-              className="absolute inset-y-0 right-4 flex items-center text-white/40 hover:text-white"
+              className="absolute inset-y-0 right-4 flex items-center text-black/50 hover:text-black"
             >
               <X className="w-5 h-5" />
             </button>
           ) : (
             <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
-              <Mic className="w-4 h-4 text-white/40" />
+              <Mic className="w-5 h-5 text-black/40" />
             </div>
           )}
         </div>
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1">
+      <div className="flex-1 px-4 md:px-8 pb-8">
         {!debouncedQuery || debouncedQuery.length <= 2 ? (
-          <div className="space-y-8">
-
-            {/* Browse All Categories Grid */}
-            <div>
-              <h2 className="text-[15px] font-bold text-white mb-3 tracking-tight">Browse All</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {BROWSE_ALL.map((item) => (
-                  <div
-                    key={item.title}
-                    onClick={() => handleBrowseClick(item.searchTerm)}
-                    className="relative flex flex-col justify-end h-24 rounded-xl p-3 cursor-pointer overflow-hidden group active:scale-95 transition-transform"
-                  >
-                    <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-90 group-hover:opacity-100 transition-opacity`} />
-                    <div className="absolute -right-4 -bottom-4 w-16 h-16 rounded-xl bg-black/20 flex items-center justify-center shrink-0 rotate-12 shadow-lg">
-                      {item.icon}
-                    </div>
-                    <h3 className="relative z-10 font-bold text-white text-sm drop-shadow-md">{item.title}</h3>
+          <div className="space-y-6">
+            <h2 className="text-[18px] font-bold text-white">Browse all</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {BROWSE_ALL.map((item) => (
+                <div
+                  key={item.title}
+                  onClick={() => handleBrowseClick(item.searchTerm)}
+                  className={`relative flex items-end h-[100px] rounded-md p-4 cursor-pointer overflow-hidden active:opacity-80 bg-gradient-to-br ${item.color}`}
+                >
+                  <h3 className="font-black text-white text-[15px] drop-shadow-sm leading-tight">{item.title}</h3>
+                  <div className="absolute -right-2 -bottom-2 w-[60px] h-[60px] rounded-md rotate-[25deg] overflow-hidden shadow-lg opacity-80">
+                    {item.icon}
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
 
-            {/* Trending Searches Pills */}
             <div>
-              <h2 className="text-base font-bold text-white mb-4 tracking-tight">🔥 Trending Searches</h2>
+              <h2 className="text-[18px] font-bold text-white mb-3">Trending</h2>
               <div className="flex flex-wrap gap-2">
                 {TRENDING_SEARCHES.map(term => (
                   <button
                     key={term}
                     onClick={() => handleTrendingClick(term)}
-                    className="px-4 py-2.5 rounded-full bg-white/5 border border-white/10 text-white/70 text-xs font-bold hover:bg-primary/20 hover:border-primary/30 hover:text-white active:scale-95"
+                    className="px-4 py-2 rounded-full bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white text-[13px] font-bold transition-colors"
                   >
                     {term}
                   </button>
                 ))}
               </div>
             </div>
-
           </div>
         ) : (
           /* Search Results */
@@ -159,38 +157,33 @@ export default function SearchPage() {
                       <span className="text-xs text-white/40 font-medium">{searchResults.songs.results.length} results</span>
                     </div>
                     <div className="space-y-1">
-                      {searchResults.songs.results.slice(0, 6).map((song: any) => (
+                      {searchResults.songs.results.slice(0, 8).map((song: any) => (
                         <div
                           key={song.id}
-                          className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 active:scale-95 group cursor-pointer transition-all"
+                          className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-[#2a2a2a] cursor-pointer group transition-colors"
                           onClick={() => handlePlaySong(song.id)}
                         >
-                          <div className="relative w-12 h-12 shrink-0 rounded-lg overflow-hidden shadow-md">
+                          <div className="relative w-10 h-10 shrink-0 rounded-sm overflow-hidden">
                             <img
                               src={song.image?.[2]?.url || song.image?.[0]?.url || ''}
                               alt={song.title}
                               className="object-cover w-full h-full"
                               loading="lazy"
                             />
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-200">
+                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                               <Play className="w-4 h-4 fill-white text-white" />
                             </div>
                           </div>
-                          <div className="flex-1 min-w-0 flex flex-col justify-center">
+                          <div className="flex-1 min-w-0">
                             <h4 className="text-[14px] font-bold text-white truncate">{song.title}</h4>
-                            <span className="text-[12px] text-white/50 truncate mt-0.5">{song.description || song.subtitle || 'Song'}</span>
+                            <span className="text-[12px] text-[#A7A7A7] truncate">{song.description || 'Song'}</span>
                           </div>
-                          <div className="flex items-center">
-                            <button 
-                              className="p-2 text-white/40 hover:text-white touch-sm shrink-0 active:scale-90"
-                              onClick={(e) => { e.stopPropagation(); setSelectedSongForPlaylist(song); }}
-                            >
-                              <ListPlus className="w-5 h-5" />
-                            </button>
-                            <button className="p-2 text-white/40 hover:text-white touch-sm shrink-0">
-                              <MoreVertical className="w-5 h-5" />
-                            </button>
-                          </div>
+                          <button
+                            className="p-2 text-[#A7A7A7] hover:text-white opacity-0 group-hover:opacity-100 touch-sm shrink-0"
+                            onClick={(e) => { e.stopPropagation(); setSelectedSongForPlaylist(song); }}
+                          >
+                            <ListPlus className="w-5 h-5" />
+                          </button>
                         </div>
                       ))}
                     </div>
@@ -301,11 +294,11 @@ export default function SearchPage() {
                 )}
               </>
             ) : (
-              <div className="text-center py-20 flex flex-col items-center gap-3">
-                <SearchIcon className="w-12 h-12 text-white/10" />
-                <p className="text-white/40 font-bold text-lg">No results found</p>
-                <p className="text-white/30 text-sm">Try searching for something else</p>
-              </div>
+          <div className="text-center py-20 flex flex-col items-center gap-4">
+            <SearchIcon className="w-12 h-12 text-[#535353]" />
+            <p className="text-white font-bold text-[18px]">No results found for "{debouncedQuery}"</p>
+            <p className="text-[#A7A7A7] text-[14px]">Please make sure your words are spelled correctly or use fewer or different keywords.</p>
+          </div>
             )}
           </div>
         )}
@@ -317,5 +310,13 @@ export default function SearchPage() {
         song={selectedSongForPlaylist} 
       />
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-white">Loading search...</div>}>
+      <SearchContent />
+    </Suspense>
   );
 }

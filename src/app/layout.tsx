@@ -32,7 +32,7 @@ export const viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover" as const,
-  themeColor: "#050816",
+  themeColor: "#000000",
 };
 
 export default function RootLayout({
@@ -41,20 +41,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" data-scroll-behavior="smooth">
       <body
-        className={`${inter.variable} antialiased min-h-[100dvh] flex flex-col bg-[#050816] text-white`}
+        className={`${inter.variable} antialiased bg-[#121212] text-white overflow-hidden`}
+        style={{ height: '100dvh', display: 'flex', flexDirection: 'column' }}
       >
         <Providers>
           {/* Main layout */}
-          <div className="flex w-full flex-1 relative">
+          <div className="flex w-full flex-1 relative min-h-0">
             {/* Desktop Sidebar */}
             <div className="hidden md:block sticky top-0 h-[100dvh] z-10 shrink-0">
               <Sidebar />
             </div>
             
-            {/* Main Content Area */}
-            <main className="flex-1 w-full pb-[148px] md:pb-[72px]">
+          {/* Main Content Area — scrolls independently */}
+            <main className="flex-1 w-full overflow-y-auto overflow-x-hidden pb-[calc(150px+env(safe-area-inset-bottom,0px))] md:pb-[130px]">
               {children}
             </main>
             

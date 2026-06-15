@@ -2,51 +2,51 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Search, Library, Crown } from 'lucide-react';
+import { Home, Search, Library } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { usePlayerStore } from '@/store/usePlayerStore';
 
 const navItems = [
   { name: 'Home', href: '/', icon: Home },
   { name: 'Search', href: '/search', icon: Search },
-  { name: 'Library', href: '/library', icon: Library },
-  { name: 'Premium', href: '/premium', icon: Crown },
+  { name: 'Your Library', href: '/library', icon: Library },
 ];
 
 export function MobileBottomNav() {
   const pathname = usePathname();
   const isExpanded = usePlayerStore(s => s.isExpanded);
 
-  // Hide bottom nav when fullscreen player is open
   if (isExpanded) return null;
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0A0A10] border-t border-white/5 flex items-start justify-around pt-2 z-50 pb-safe" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 8px), 8px)', height: 'calc(70px + max(env(safe-area-inset-bottom, 0px), 0px))' }}>
+    <nav
+      className="md:hidden fixed bottom-0 left-0 right-0 z-[60] flex items-center justify-around"
+      style={{
+        background: '#000000',
+        height: 'calc(60px + env(safe-area-inset-bottom, 0px))',
+        paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+        borderTop: '1px solid rgba(255,255,255,0.08)',
+      }}
+    >
       {navItems.map((item) => {
         const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
-        
         return (
           <Link
             key={item.name}
             href={item.href}
-            className="flex flex-col items-center justify-center w-16 h-full gap-1 active:scale-95 transition-transform group"
+            className="flex flex-col items-center justify-center gap-1 w-full h-full active:opacity-70 transition-opacity"
           >
-            <div className="relative">
-              <item.icon 
-                className={cn(
-                  "w-6 h-6 transition-all duration-300", 
-                  isActive 
-                    ? "text-secondary drop-shadow-[0_0_10px_rgba(236,72,153,0.8)]" 
-                    : "text-white/40 group-hover:text-white/70"
-                )} 
-              />
-            </div>
-            <span 
+            <item.icon
               className={cn(
-                "text-[10px] font-medium transition-colors mt-1",
-                isActive ? "text-white" : "text-white/40"
+                'w-[24px] h-[24px] transition-none',
+                isActive ? 'text-white fill-current' : 'text-[#B3B3B3]'
               )}
-            >
+              strokeWidth={isActive ? 2.5 : 2}
+            />
+            <span className={cn(
+              'text-[10px] font-bold transition-none',
+              isActive ? 'text-white' : 'text-[#B3B3B3]'
+            )}>
               {item.name}
             </span>
           </Link>

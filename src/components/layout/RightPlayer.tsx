@@ -2,7 +2,7 @@
 
 import { usePlayerStore } from '@/store/usePlayerStore';
 import { useLibraryStore } from '@/store/useLibraryStore';
-import { Play, Pause, SkipBack, SkipForward, Repeat, Shuffle, Heart, Music, Maximize2, Sparkles } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Repeat, Shuffle, Heart, Music, ListMusic } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function RightPlayer() {
@@ -11,13 +11,13 @@ export function RightPlayer() {
 
   if (!currentSong) {
     return (
-      <aside className="hidden xl:flex flex-col w-[340px] h-full bg-[#05050f] border-l border-white/5 p-6 pb-[72px] shrink-0">
-        <div className="flex-1 flex flex-col items-center justify-center text-center opacity-50">
-          <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
-            <Music className="w-8 h-8 text-white" />
+      <aside className="hidden xl:flex flex-col w-[320px] h-full bg-[#121212] border-l border-white/[0.06] p-4 pb-[110px] shrink-0 items-center justify-center">
+        <div className="flex flex-col items-center text-center gap-3 opacity-50">
+          <div className="w-16 h-16 rounded-full bg-[#282828] flex items-center justify-center">
+            <Music className="w-7 h-7 text-[#B3B3B3]" />
           </div>
-          <h3 className="text-lg font-bold text-white mb-2">Queue is empty</h3>
-          <p className="text-sm text-white/60">Play a song to see details here</p>
+          <p className="text-[14px] font-bold text-white">Play something</p>
+          <p className="text-[12px] text-[#A7A7A7]">Select a song to see it here</p>
         </div>
       </aside>
     );
@@ -28,95 +28,109 @@ export function RightPlayer() {
   const artistNames = currentSong.artists?.primary?.map(a => a.name).join(', ') || 'Unknown Artist';
   const progressPct = duration > 0 ? (progress / duration) * 100 : 0;
 
-  const formatTime = (t: number) => {
+  const fmt = (t: number) => {
     const m = Math.floor(t / 60);
     const s = Math.floor(t % 60);
     return `${m}:${s < 10 ? '0' : ''}${s}`;
   };
 
   return (
-    <aside className="hidden xl:flex flex-col w-[340px] h-full bg-[#05050f] border-l border-white/5 overflow-y-auto pb-[72px] shrink-0">
-      
-      {/* Immersive header area */}
-      <div className="p-6 pb-0 flex justify-between items-center relative z-10">
-        <span className="text-white font-bold text-sm">Now Playing</span>
-        <button className="text-white/60 hover:text-white transition">
-          <Maximize2 className="w-4 h-4" />
+    <aside className="hidden xl:flex flex-col w-[320px] h-full bg-[#121212] border-l border-white/[0.06] overflow-y-auto pb-[110px] shrink-0 scrollbar-hide">
+
+      {/* Header */}
+      <div className="px-4 pt-5 pb-2 flex items-center justify-between">
+        <span className="text-[13px] font-bold text-white">Now playing</span>
+        <button className="text-[#A7A7A7] hover:text-white transition-colors">
+          <ListMusic className="w-4 h-4" />
         </button>
       </div>
-      
-      <div className="px-6 mt-6 relative group">
-        {/* Glowing backdrop matching album art (Optimized) */}
-        <div 
-          className="absolute inset-6 bg-cover bg-center opacity-30 rounded-3xl scale-110 -z-10 group-hover:opacity-50 transition-opacity duration-700"
-          style={{ backgroundImage: `url(${img})` }}
-        />
-        <div className="absolute inset-6 bg-[#05050f]/50 rounded-3xl scale-110 -z-10"></div>
-        <div className="w-full aspect-square rounded-3xl overflow-hidden shadow-2xl relative border border-white/10">
-          <img src={img} alt={currentSong.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+
+      {/* Album Art */}
+      <div className="px-4 mt-2">
+        <div className="w-full aspect-square rounded-sm overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+          {img ? (
+            <img src={img} alt={currentSong.name} className="w-full h-full object-cover" loading="lazy" />
+          ) : (
+            <div className="w-full h-full bg-[#282828]" />
+          )}
         </div>
       </div>
 
-      <div className="px-6 mt-8 flex items-start justify-between">
-        <div className="flex-1 min-w-0 pr-4">
-          <h2 className="text-2xl font-bold text-white truncate drop-shadow-md">{currentSong.name}</h2>
-          <p className="text-sm text-white/70 truncate mt-1 flex items-center gap-1">
-            {artistNames}
-            <span className="w-3 h-3 rounded-full bg-blue-500 flex items-center justify-center text-[8px] text-white">✓</span>
-          </p>
+      {/* Song Info + Like */}
+      <div className="px-4 mt-5 flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <h2 className="text-[16px] font-bold text-white truncate hover:underline cursor-pointer">{currentSong.name}</h2>
+          <p className="text-[13px] text-[#A7A7A7] truncate hover:underline cursor-pointer mt-0.5">{artistNames}</p>
         </div>
-        <button 
+        <button
           onClick={() => toggleLike(currentSong)}
-          className={cn("transition shrink-0 p-2 rounded-full hover:bg-white/10", liked ? "text-secondary" : "text-white/40 hover:text-white")}
+          className={cn('p-1.5 shrink-0 transition-all hover:scale-110', liked ? 'text-[#FFD700]' : 'text-[#A7A7A7] hover:text-white')}
         >
-          <Heart className={cn("w-6 h-6", liked ? "fill-current drop-shadow-[0_0_10px_rgba(236,72,153,0.8)]" : "")} />
+          <Heart className={cn('w-5 h-5', liked ? 'fill-current' : '')} />
         </button>
       </div>
 
-      {/* Progress Bar (Right Sidebar style) */}
-      <div className="px-6 mt-6">
-        <div className="flex items-center gap-2 text-[10px] text-white/50 font-medium mb-2 justify-between">
-          <span>{formatTime(progress)}</span>
-          <span>{formatTime(duration)}</span>
+      {/* Progress */}
+      <div className="px-4 mt-5">
+        <div
+          className="w-full h-4 flex items-center cursor-pointer group relative"
+          onClick={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const pct = (e.clientX - rect.left) / rect.width;
+            setProgress(pct * duration);
+            const audio = (window as any).__audioElement;
+            if (audio) audio.currentTime = pct * duration;
+          }}
+        >
+          <div className="w-full h-[4px] bg-[#4D4D4D] rounded-full absolute" />
+          <div
+            className="h-[4px] bg-white group-hover:bg-[#FFD700] rounded-full absolute transition-colors duration-150"
+            style={{ width: `${progressPct}%` }}
+          />
+          <div
+            className="absolute w-3 h-3 bg-white rounded-full opacity-0 group-hover:opacity-100 -translate-x-1/2"
+            style={{ left: `${progressPct}%` }}
+          />
         </div>
-        <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden relative cursor-pointer"
-             onClick={(e) => {
-               const rect = e.currentTarget.getBoundingClientRect();
-               const pct = (e.clientX - rect.left) / rect.width;
-               setProgress(pct * duration);
-               const audio = (window as any).__audioElement;
-               if (audio) audio.currentTime = pct * duration;
-             }}>
-          <div className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary to-secondary rounded-full"
-               style={{ width: `${progressPct}%` }}>
-             {/* Glow dot */}
-             <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-[0_0_10px_#fff]" />     
-          </div>
+        <div className="flex items-center justify-between mt-1">
+          <span className="text-[11px] text-[#A7A7A7] tabular-nums">{fmt(progress)}</span>
+          <span className="text-[11px] text-[#A7A7A7] tabular-nums">{fmt(duration)}</span>
         </div>
       </div>
 
-      {/* Big Controls */}
-      <div className="px-6 mt-8 flex items-center justify-between">
-        <button onClick={toggleShuffle} className={cn("transition", isShuffling ? "text-primary drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]" : "text-white/40 hover:text-white")}>
+      {/* Controls */}
+      <div className="px-4 mt-5 flex items-center justify-between">
+        <button
+          onClick={toggleShuffle}
+          className={cn('transition-all hover:scale-110 relative', isShuffling ? 'text-[#FFD700]' : 'text-[#A7A7A7] hover:text-white')}
+        >
           <Shuffle className="w-5 h-5" />
+          {isShuffling && <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#FFD700]" />}
         </button>
-        <button onClick={previous} className="text-white hover:scale-110 transition drop-shadow-md">
-          <SkipBack className="w-7 h-7 fill-current" />
+
+        <button onClick={previous} className="text-white hover:scale-110 transition-all">
+          <SkipBack className="w-6 h-6 fill-current" />
         </button>
-        <button 
-          onClick={togglePlay} 
-          className="w-16 h-16 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white shadow-lg shadow-primary/40 hover:shadow-primary/60 transition hover:scale-105"
+
+        <button
+          onClick={togglePlay}
+          className="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 active:scale-95 transition-transform shadow-md"
         >
-          {isPlaying ? <Pause className="w-7 h-7 fill-current" /> : <Play className="w-7 h-7 fill-current ml-1" />}
+          {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
         </button>
-        <button onClick={next} className="text-white hover:scale-110 transition drop-shadow-md">
-          <SkipForward className="w-7 h-7 fill-current" />
+
+        <button onClick={next} className="text-white hover:scale-110 transition-all">
+          <SkipForward className="w-6 h-6 fill-current" />
         </button>
-        <button onClick={toggleLoop} className={cn("transition", isLooping ? "text-primary drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]" : "text-white/40 hover:text-white")}>
+
+        <button
+          onClick={toggleLoop}
+          className={cn('transition-all hover:scale-110 relative', isLooping ? 'text-[#FFD700]' : 'text-[#A7A7A7] hover:text-white')}
+        >
           <Repeat className="w-5 h-5" />
+          {isLooping && <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#FFD700]" />}
         </button>
       </div>
-
 
     </aside>
   );

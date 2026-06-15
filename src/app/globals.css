@@ -3,24 +3,26 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-primary: #A855F7;
-  --color-secondary: #EC4899;
+  --color-primary: #FFD700;
+  --color-secondary: #EAB308;
   --color-accent: #22D3EE;
   --color-surface: rgba(255, 255, 255, 0.05);
-  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border: rgba(255, 255, 255, 0.08);
   --font-sans: var(--font-inter);
 }
 
 :root {
-  --background: #050816;
+  --background: #121212;
   --foreground: #ffffff;
-  --primary: #A855F7;
-  --secondary: #EC4899;
+  --primary: #FFD700;
+  --secondary: #EAB308;
   --accent: #22D3EE;
+  --card-bg: #181818;
+  --card-hover: #282828;
+  --nav-bg: rgba(9, 9, 9, 0.95);
+  --sidebar-bg: #000000;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --nav-height: 70px;
-  --mini-player-height: 64px;
 }
 
 /* ─── GPU-accelerated base ─── */
@@ -40,65 +42,58 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'Inter', sans-serif;
+  overflow: hidden;
 }
 
 /* ─── Smooth scrolling containers ─── */
-main, aside, nav {
+main {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
   -webkit-overflow-scrolling: touch;
+  will-change: scroll-position;
 }
 
-/* ─── Glassmorphism ─── */
-.glass {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-.glass-panel {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+/* ─── Performance: hardware acceleration for animated elements ─── */
+.hw-accel {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 /* ─── Images ─── */
 img {
   content-visibility: auto;
-  image-rendering: -webkit-optimize-contrast;
-}
-
-/* ─── Custom scrollbar — desktop only ─── */
-@media (min-width: 768px) {
-  ::-webkit-scrollbar { width: 4px; height: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 10px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
-}
-
-/* ─── Hide scrollbar on mobile ─── */
-@media (max-width: 767px) {
-  ::-webkit-scrollbar { display: none; }
-  * { scrollbar-width: none; }
-}
-
-/* ─── Smooth transitions — targeted only ─── */
-a, button, [role="button"] {
-  transition: color 0.15s ease, transform 0.12s ease, opacity 0.15s ease;
 }
 
 /* ─── Scrollbar hide utility ─── */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* ─── Snap scroll ─── */
+/* ─── Custom scrollbar — desktop only ─── */
+@media (min-width: 768px) {
+  main::-webkit-scrollbar { width: 0px; }
+  aside::-webkit-scrollbar { width: 0px; }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+}
+
+/* ─── Mobile: no scrollbar ─── */
+@media (max-width: 767px) {
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; }
+}
+
+/* ─── Spotify-style snap scroll ─── */
 .snap-x {
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  scroll-padding-left: 16px;
 }
 .snap-start { scroll-snap-align: start; }
 
-/* ─── Shimmer skeleton loading ─── */
+/* ─── Skeleton shimmer ─── */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
@@ -107,77 +102,67 @@ a, button, [role="button"] {
   background: linear-gradient(
     90deg,
     rgba(255,255,255,0.04) 25%,
-    rgba(255,255,255,0.09) 50%,
+    rgba(255,255,255,0.08) 50%,
     rgba(255,255,255,0.04) 75%
   );
   background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+  animation: shimmer 1.4s infinite;
 }
-
-/* ─── Marquee animation ─── */
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-.animate-marquee { animation: marquee 8s linear infinite; }
 
 /* ─── Equalizer animation ─── */
 @keyframes eq-bar {
   0%, 100% { transform: scaleY(0.3); }
   50% { transform: scaleY(1); }
 }
-
-/* ─── Blob animation ─── */
-@keyframes blob {
-  0% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(20px, -30px) scale(1.1); }
-  66% { transform: translate(-15px, 15px) scale(0.9); }
-  100% { transform: translate(0, 0) scale(1); }
-}
-.animate-blob { animation: blob 7s infinite ease-in-out; }
-
-/* ─── Spin slow ─── */
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-.animate-spin-slow { animation: spin-slow 15s linear infinite; }
-
-/* ─── Pulse glow ─── */
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 4px rgba(168, 85, 247, 0.4); }
-  50% { box-shadow: 0 0 12px rgba(168, 85, 247, 0.8); }
-}
+.animate-eq-1 { animation: eq-bar 0.7s ease-in-out infinite; transform-origin: bottom; }
+.animate-eq-2 { animation: eq-bar 0.9s ease-in-out infinite 0.1s; transform-origin: bottom; }
+.animate-eq-3 { animation: eq-bar 0.8s ease-in-out infinite 0.2s; transform-origin: bottom; }
+.animate-eq-4 { animation: eq-bar 1.0s ease-in-out infinite 0.15s; transform-origin: bottom; }
 
 /* ─── Fade in ─── */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.animate-fade-in { animation: fadeIn 0.3s ease forwards; }
+.animate-fade-in { animation: fadeIn 0.25s ease forwards; }
+
+/* ─── Slide up ─── */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up { animation: slideUp 0.3s ease forwards; }
 
 /* ─── Safe area utilities ─── */
 .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
 .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
 .mt-safe { margin-top: env(safe-area-inset-top, 0px); }
 
-/* ─── Mobile touch targets — strict minimum ─── */
+/* ─── Background opacity utilities ─── */
+.bg-white\/8 { background-color: rgba(255, 255, 255, 0.08); }
+.bg-white\/12 { background-color: rgba(255, 255, 255, 0.12); }
+.border-white\/8 { border-color: rgba(255, 255, 255, 0.08); }
+.border-white\/15 { border-color: rgba(255, 255, 255, 0.15); }
+.hover\:bg-white\/8:hover { background-color: rgba(255, 255, 255, 0.08); }
+.hover\:bg-white\/12:hover { background-color: rgba(255, 255, 255, 0.12); }
+
+/* ─── Card hover — lifted effect ─── */
+.card-hover {
+  transition: background 0.2s ease;
+}
+.card-hover:hover {
+  background: var(--card-hover) !important;
+}
+
+/* ─── Mobile touch targets ─── */
 @media (max-width: 767px) {
   button, a[href], [role="button"] {
     min-height: 40px;
     min-width: 40px;
   }
-  /* Override for icon-only tiny buttons */
   button.touch-sm, a.touch-sm {
     min-height: 32px;
     min-width: 32px;
-  }
-}
-
-/* ─── Mobile overscroll ─── */
-@media (max-width: 767px) {
-  main {
-    /* removed overscroll-behavior-y: contain to fix scroll lock on some mobile browsers */
   }
 }
 

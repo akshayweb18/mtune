@@ -33,7 +33,7 @@ export default function PlaylistPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-full bg-[#05050f] min-h-[50vh]">
+      <div className="flex items-center justify-center h-full bg-[#05050A] min-h-[50vh]">
         <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin shadow-[0_0_15px_rgba(168,85,247,0.5)]" />
       </div>
     );
@@ -75,7 +75,7 @@ export default function PlaylistPage() {
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 scale-110"
           style={{ backgroundImage: `url(${img})` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#05050f] via-[#05050f]/80 to-transparent z-0"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#05050A] via-[#05050A]/80 to-transparent z-0"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent z-0"></div>
 
         <div className="relative z-10 flex flex-col md:flex-row items-end gap-6 md:gap-8 w-full">
