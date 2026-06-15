@@ -43,8 +43,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" data-scroll-behavior="smooth">
       <body
-        className={`${inter.variable} antialiased bg-[#121212] text-white overflow-hidden fixed inset-0 w-full h-full`}
-        style={{ display: 'flex', flexDirection: 'column' }}
+        className={`${inter.variable} antialiased bg-[#121212] text-white`}
+        style={{ height: '100dvh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
       >
         <Providers>
           {/* Main layout */}
@@ -55,7 +55,14 @@ export default function RootLayout({
             </div>
             
           {/* Main Content Area — scrolls independently */}
-            <main className="flex-1 w-full overflow-y-auto overflow-x-hidden pb-[180px] md:pb-[140px] relative scroll-smooth" style={{ WebkitOverflowScrolling: 'touch' }}>
+            <main
+              className="flex-1 w-full overflow-y-auto overflow-x-hidden md:pb-[140px]"
+              style={{
+                WebkitOverflowScrolling: 'touch',
+                /* Mobile: 60px nav + 64px mini-player + 16px gap + safe area */
+                paddingBottom: 'calc(140px + env(safe-area-inset-bottom, 0px))',
+              }}
+            >
               {children}
             </main>
             
