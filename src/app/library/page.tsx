@@ -258,6 +258,7 @@ export default function LibraryPage() {
             <p className="text-[#A7A7A7] text-[14px]">Follow artists to see them here.</p>
           </div>
         )}
+      </div>
 
       <AddToPlaylistModal 
         isOpen={!!selectedSongForPlaylist} 
