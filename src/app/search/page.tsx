@@ -167,7 +167,7 @@ function SearchContent() {
                           <div className="relative w-10 h-10 shrink-0 rounded-sm overflow-hidden">
                             <img
                               src={song.image?.[2]?.url || song.image?.[0]?.url || ''}
-                              alt={song.title}
+                              alt={song.name}
                               className="object-cover w-full h-full"
                               loading="lazy"
                             />
