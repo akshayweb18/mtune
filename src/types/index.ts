@@ -34,6 +34,7 @@ export interface Artist {
   image: Image[];
   type: string;
   url: string;
+  followerCount?: number;
 }
 
 export interface Image {
