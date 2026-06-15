@@ -39,13 +39,13 @@ export function MobileBottomNav() {
             <item.icon
               className={cn(
                 'w-[24px] h-[24px] transition-none',
-                isActive ? 'text-white fill-current' : 'text-[#B3B3B3]'
+                isActive ? 'text-[#FFD700] fill-current' : 'text-[#B3B3B3]'
               )}
               strokeWidth={isActive ? 2.5 : 2}
             />
             <span className={cn(
               'text-[10px] font-bold transition-none',
-              isActive ? 'text-white' : 'text-[#B3B3B3]'
+              isActive ? 'text-[#FFD700]' : 'text-[#B3B3B3]'
             )}>
               {item.name}
             </span>
