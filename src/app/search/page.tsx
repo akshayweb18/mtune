@@ -38,23 +38,25 @@ function SearchContent() {
   const setCurrentSong = usePlayerStore((s) => s.setCurrentSong);
   const setQueue = usePlayerStore((s) => s.setQueue);
 
-  const { data: searchResults, isLoading } = useQuery({
+  const { data: searchResults, isLoading: globalLoading } = useQuery({
     queryKey: ['globalSearch', debouncedQuery],
     queryFn: () => saavnApi.searchGlobal(debouncedQuery),
     enabled: debouncedQuery.length > 2,
   });
 
-  const handlePlaySong = useCallback(async (songId: string) => {
-    try {
-      const songDetails = await saavnApi.getSongDetails(songId);
-      if (songDetails && songDetails.length > 0) {
-        setCurrentSong(songDetails[0]);
-        setQueue([songDetails[0]]);
-      }
-    } catch (error) {
-      console.error('Error fetching song details', error);
-    }
-  }, [setCurrentSong, setQueue]);
+  const { data: songsResults, isLoading: songsLoading } = useQuery({
+    queryKey: ['songsSearch', debouncedQuery],
+    queryFn: () => saavnApi.searchSongs(debouncedQuery, 1, 10),
+    enabled: debouncedQuery.length > 2,
+  });
+
+  const isLoading = globalLoading || songsLoading;
+
+  const handlePlaySong = useCallback((song: Song, index: number) => {
+    const queue = songsResults?.results || [];
+    setCurrentSong(song);
+    setQueue(queue.slice(index));
+  }, [setCurrentSong, setQueue, songsResults]);
 
   const handleBrowseClick = (searchTerm: string) => {
     setQuery(searchTerm);
@@ -64,12 +66,11 @@ function SearchContent() {
     setQuery(term);
   };
 
-  const hasResults = searchResults && (
-    (searchResults.songs?.results?.length > 0) ||
+  const hasResults = (searchResults && (
     (searchResults.artists?.results?.length > 0) ||
     (searchResults.albums?.results?.length > 0) ||
     (searchResults.playlists?.results?.length > 0)
-  );
+  )) || (songsResults && songsResults.results?.length > 0);
 
   return (
     <div className="flex flex-col" style={{ paddingTop: 'max(env(safe-area-inset-top, 16px), 16px)' }}>
@@ -148,20 +149,20 @@ function SearchContent() {
             ) : hasResults ? (
               <>
                 {/* ─── Songs Section ─── */}
-                {searchResults.songs?.results?.length > 0 && (
+                {songsResults?.results?.length > 0 && (
                   <div>
                     <div className="flex items-center justify-between mb-4">
                       <h2 className="text-lg font-bold text-white flex items-center gap-2">
                         <Music className="w-4 h-4 text-primary" /> Songs
                       </h2>
-                      <span className="text-xs text-white/40 font-medium">{searchResults.songs.results.length} results</span>
+                      <span className="text-xs text-white/40 font-medium">{songsResults.results.length} results</span>
                     </div>
                     <div className="space-y-1">
-                      {searchResults.songs.results.slice(0, 8).map((song: any) => (
+                      {songsResults.results.slice(0, 8).map((song: Song, index: number) => (
                         <div
                           key={song.id}
                           className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-[#2a2a2a] cursor-pointer group transition-colors"
-                          onClick={() => handlePlaySong(song.id)}
+                          onClick={() => handlePlaySong(song, index)}
                         >
                           <div className="relative w-10 h-10 shrink-0 rounded-sm overflow-hidden">
                             <img
@@ -175,8 +176,10 @@ function SearchContent() {
                             </div>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h4 className="text-[14px] font-bold text-white truncate">{song.title}</h4>
-                            <span className="text-[12px] text-[#A7A7A7] truncate">{song.description || 'Song'}</span>
+                            <h4 className="text-[14px] font-bold text-white truncate">{song.name}</h4>
+                            <span className="text-[12px] text-[#A7A7A7] truncate">
+                              {song.artists?.primary?.map((a: any) => a.name).join(', ') || 'Song'}
+                            </span>
                           </div>
                           <button
                             className="p-2 text-[#A7A7A7] hover:text-white opacity-0 group-hover:opacity-100 touch-sm shrink-0"
