@@ -194,16 +194,16 @@ function SearchContent() {
                 )}
 
                 {/* ─── Artists Section ─── */}
-                {searchResults.artists?.results?.length > 0 && (
+                {searchResults?.artists?.results?.length > 0 && (
                   <div>
                     <div className="flex items-center justify-between mb-4">
                       <h2 className="text-lg font-bold text-white flex items-center gap-2">
                         <Mic2 className="w-4 h-4 text-secondary" /> Artists
                       </h2>
-                      <span className="text-xs text-white/40 font-medium">{searchResults.artists.results.length} results</span>
+                      <span className="text-xs text-white/40 font-medium">{searchResults?.artists.results.length} results</span>
                     </div>
                     <div className="flex overflow-x-auto gap-4 scrollbar-hide pb-2 -mx-4 px-4 md:mx-0 md:px-0 snap-x">
-                      {searchResults.artists.results.map((artist: any) => (
+                      {searchResults?.artists.results.map((artist: any) => (
                         <Link
                           key={artist.id}
                           href={`/artist/${artist.id}`}
@@ -227,16 +227,16 @@ function SearchContent() {
                 )}
 
                 {/* ─── Albums Section ─── */}
-                {searchResults.albums?.results?.length > 0 && (
+                {searchResults?.albums?.results?.length > 0 && (
                   <div>
                     <div className="flex items-center justify-between mb-4">
                       <h2 className="text-lg font-bold text-white flex items-center gap-2">
                         <Disc className="w-4 h-4 text-orange-400" /> Albums
                       </h2>
-                      <span className="text-xs text-white/40 font-medium">{searchResults.albums.results.length} results</span>
+                      <span className="text-xs text-white/40 font-medium">{searchResults?.albums.results.length} results</span>
                     </div>
                     <div className="flex overflow-x-auto gap-4 scrollbar-hide pb-2 -mx-4 px-4 md:mx-0 md:px-0 snap-x">
-                      {searchResults.albums.results.map((album: any) => (
+                      {searchResults?.albums.results.map((album: any) => (
                         <Link
                           key={album.id}
                           href={`/album/${album.id}`}
@@ -262,16 +262,16 @@ function SearchContent() {
                 )}
 
                 {/* ─── Playlists Section ─── */}
-                {searchResults.playlists?.results?.length > 0 && (
+                {searchResults?.playlists?.results?.length > 0 && (
                   <div>
                     <div className="flex items-center justify-between mb-4">
                       <h2 className="text-lg font-bold text-white flex items-center gap-2">
                         <ListMusic className="w-4 h-4 text-blue-400" /> Playlists
                       </h2>
-                      <span className="text-xs text-white/40 font-medium">{searchResults.playlists.results.length} results</span>
+                      <span className="text-xs text-white/40 font-medium">{searchResults?.playlists.results.length} results</span>
                     </div>
                     <div className="flex overflow-x-auto gap-4 scrollbar-hide pb-2 -mx-4 px-4 md:mx-0 md:px-0 snap-x">
-                      {searchResults.playlists.results.map((pl: any) => (
+                      {searchResults?.playlists.results.map((pl: any) => (
                         <Link
                           key={pl.id}
                           href={`/playlist/${pl.id}`}
