@@ -194,7 +194,7 @@ function SearchContent() {
                 )}
 
                 {/* ─── Artists Section ─── */}
-                {searchResults?.artists?.results?.length > 0 && (
+                {(searchResults?.artists?.results?.length ?? 0) > 0 && (
                   <div>
                     <div className="flex items-center justify-between mb-4">
                       <h2 className="text-lg font-bold text-white flex items-center gap-2">
@@ -227,7 +227,7 @@ function SearchContent() {
                 )}
 
                 {/* ─── Albums Section ─── */}
-                {searchResults?.albums?.results?.length > 0 && (
+                {(searchResults?.albums?.results?.length ?? 0) > 0 && (
                   <div>
                     <div className="flex items-center justify-between mb-4">
                       <h2 className="text-lg font-bold text-white flex items-center gap-2">
@@ -262,7 +262,7 @@ function SearchContent() {
                 )}
 
                 {/* ─── Playlists Section ─── */}
-                {searchResults?.playlists?.results?.length > 0 && (
+                {(searchResults?.playlists?.results?.length ?? 0) > 0 && (
                   <div>
                     <div className="flex items-center justify-between mb-4">
                       <h2 className="text-lg font-bold text-white flex items-center gap-2">
