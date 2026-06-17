@@ -71,7 +71,7 @@ export function MobilePlayer() {
           </div>
 
           {/* Track info */}
-          <div className="flex-1 min-w-0">
+          <div className="flex flex-col justify-center flex-1 min-w-0">
             <p className="text-[13px] font-bold text-white truncate">{currentSong.name}</p>
             <p className="text-[11px] text-[#A7A7A7] truncate">{artistNames}</p>
           </div>

@@ -81,9 +81,9 @@ export function Sidebar() {
               <div className="w-10 h-10 rounded-sm flex items-center justify-center shrink-0" style={{ background: 'linear-gradient(135deg, #450af5, #c4efd9)' }}>
                 <Heart className="w-5 h-5 text-white fill-white" />
               </div>
-              <div>
+              <div className="flex-1 min-w-0">
                 <p className={cn('text-[14px] font-bold truncate', pathname === '/liked' ? 'text-[#FFD700]' : 'text-[#B3B3B3] group-hover:text-white')}>Liked Songs</p>
-                <p className="text-[11px] text-[#6a6a6a]">Playlist</p>
+                <p className="text-[11px] text-[#6a6a6a] truncate">Playlist</p>
               </div>
             </Link>
 
@@ -91,9 +91,9 @@ export function Sidebar() {
               <div className="w-10 h-10 rounded-sm bg-[#333] flex items-center justify-center shrink-0">
                 <History className="w-5 h-5 text-[#B3B3B3]" />
               </div>
-              <div>
+              <div className="flex-1 min-w-0">
                 <p className={cn('text-[14px] font-bold truncate', pathname === '/history' ? 'text-[#FFD700]' : 'text-[#B3B3B3] group-hover:text-white')}>Recently Played</p>
-                <p className="text-[11px] text-[#6a6a6a]">Playlist</p>
+                <p className="text-[11px] text-[#6a6a6a] truncate">Playlist</p>
               </div>
             </Link>
           </div>
@@ -116,9 +116,9 @@ export function Sidebar() {
                     <ListMusic className="w-4 h-4 text-[#6a6a6a]" />
                   )}
                 </div>
-                <div className="min-w-0">
+                <div className="flex-1 min-w-0">
                   <p className={cn('text-[14px] font-bold truncate', isActive ? 'text-[#FFD700]' : 'text-[#B3B3B3] group-hover:text-white')}>{playlist.name}</p>
-                  <p className="text-[11px] text-[#6a6a6a]">Playlist · {playlist.songs.length} songs</p>
+                  <p className="text-[11px] text-[#6a6a6a] truncate">Playlist · {playlist.songs.length} songs</p>
                 </div>
               </Link>
             );
