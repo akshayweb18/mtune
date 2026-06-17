@@ -86,7 +86,7 @@ export function MobilePlayer() {
             </button>
             <button
               onClick={togglePlay}
-              className="w-10 h-10 flex items-center justify-center text-white"
+              className="w-10 h-10 flex items-center justify-center text-[#FFD700]"
             >
               {isPlaying ? <Pause className="w-6 h-6 fill-current" /> : <Play className="w-6 h-6 fill-current" />}
             </button>
@@ -226,7 +226,7 @@ export function MobilePlayer() {
 
             <button
               onClick={togglePlay}
-              className="w-[66px] h-[66px] rounded-full bg-white flex items-center justify-center text-black active:scale-95 transition-transform"
+              className="w-[66px] h-[66px] rounded-full bg-[#FFD700] flex items-center justify-center text-black active:scale-95 transition-transform"
             >
               {isPlaying ? <Pause className="w-8 h-8 fill-current" /> : <Play className="w-8 h-8 fill-current ml-1" />}
             </button>

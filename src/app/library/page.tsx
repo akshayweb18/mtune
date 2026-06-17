@@ -134,7 +134,7 @@ export default function LibraryPage() {
               className={cn(
                 'px-4 py-1.5 rounded-full text-[13px] font-bold whitespace-nowrap transition-colors duration-150',
                 isActive
-                  ? 'bg-white text-black'
+                  ? 'bg-[#FFD700] text-black'
                   : 'bg-[#2a2a2a] text-white hover:bg-[#3a3a3a]'
               )}
             >

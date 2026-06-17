@@ -114,7 +114,7 @@ export function DesktopBottomPlayer() {
 
           <button
             onClick={togglePlay}
-            className="w-9 h-9 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 active:scale-95 transition-transform shadow-md"
+            className="w-9 h-9 rounded-full bg-[#FFD700] text-black flex items-center justify-center hover:scale-105 active:scale-95 transition-transform shadow-md"
           >
             {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
           </button>

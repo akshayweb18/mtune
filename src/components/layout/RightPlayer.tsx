@@ -114,7 +114,7 @@ export function RightPlayer() {
 
         <button
           onClick={togglePlay}
-          className="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 active:scale-95 transition-transform shadow-md"
+          className="w-12 h-12 rounded-full bg-[#FFD700] text-black flex items-center justify-center hover:scale-105 active:scale-95 transition-transform shadow-md"
         >
           {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
         </button>

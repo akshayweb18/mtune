@@ -45,15 +45,15 @@ export default function RootLayout({
       <body className={`${inter.variable} antialiased bg-[#121212] text-white`}>
         <Providers>
           {/* Main layout */}
-          <div className="flex w-full min-h-screen">
+          <div className="flex w-full h-[100dvh] overflow-hidden">
             {/* Desktop Sidebar */}
-            <div className="hidden md:block sticky top-0 h-[100dvh] z-10 shrink-0">
+            <div className="hidden md:block h-full z-10 shrink-0">
               <Sidebar />
             </div>
             
-          {/* Main Content Area — scrolls naturally with the body */}
+          {/* Main Content Area — scrolls naturally inside main */}
             <main
-              className="flex-1 w-full md:pb-[140px]"
+              className="flex-1 w-full h-full overflow-y-auto md:pb-[140px]"
               style={{
                 WebkitOverflowScrolling: 'touch',
                 /* Mobile: 60px nav + 64px mini-player + 16px gap + safe area */
@@ -64,7 +64,7 @@ export default function RootLayout({
             </main>
             
             {/* Desktop Right Player Sidebar */}
-            <div className="hidden lg:block sticky top-0 h-[100dvh] z-10 shrink-0">
+            <div className="hidden lg:block h-full z-10 shrink-0">
               <RightPlayer />
             </div>
           </div>
