@@ -53,11 +53,17 @@ export default function RootLayout({
             
           {/* Main Content Area — scrolls naturally inside main */}
             <main
-              className="flex-1 w-full h-full overflow-y-auto md:pb-[140px]"
+              id="main-scroll"
+              className="flex-1 w-full h-full overflow-y-auto"
               style={{
                 WebkitOverflowScrolling: 'touch',
-                /* Mobile: 60px nav + 64px mini-player + 16px gap + safe area */
-                paddingBottom: 'calc(140px + env(safe-area-inset-bottom, 0px))',
+                overscrollBehaviorY: 'contain',
+                /*
+                 * Mobile: bottomNav(60px) + miniPlayer(56px) + gaps(16px) + extra(16px) = 148px
+                 * Desktop: DesktopBottomPlayer(90px) + gap(16px) = 106px  → use 140px for safety
+                 * Safe-area adds notch/home-bar height
+                 */
+                paddingBottom: 'calc(var(--scroll-pad-mobile, 156px) + env(safe-area-inset-bottom, 0px))',
               }}
             >
               {children}

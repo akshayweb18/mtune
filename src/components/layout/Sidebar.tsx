@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Home, Search, Library, Plus, Heart, ListMusic, History } from 'lucide-react';
 import { useState } from 'react';
@@ -15,8 +15,21 @@ const mainLinks = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isCreatePlaylistOpen, setIsCreatePlaylistOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const customPlaylists = useLibraryStore(s => s.customPlaylists);
+
+  const handleFilterClick = (filter: string) => {
+    if (filter === 'Artists') {
+      router.push('/artists');
+      setActiveFilter('Artists');
+      return;
+    }
+    setActiveFilter(activeFilter === filter ? null : filter);
+  };
+
+  const showRecentlyPlayed = activeFilter !== 'Playlists';
 
   return (
     <>
@@ -71,8 +84,20 @@ export function Sidebar() {
 
           {/* Library filter pills */}
           <div className="flex gap-2 px-1 mb-3 flex-wrap">
-            <button className="px-3 py-1 rounded-full bg-[#FFD700] text-black text-[12px] font-bold">Playlists</button>
-            <button className="px-3 py-1 rounded-full bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white text-[12px] font-bold transition-colors">Artists</button>
+            {['Playlists', 'Artists'].map((filter) => (
+              <button
+                key={filter}
+                onClick={() => handleFilterClick(filter)}
+                className={cn(
+                  'px-3 py-1 rounded-full text-[12px] font-bold transition-colors',
+                  activeFilter === filter
+                    ? 'bg-[#FFD700] text-black'
+                    : 'bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white'
+                )}
+              >
+                {filter}
+              </button>
+            ))}
           </div>
 
           {/* Fixed library links */}
@@ -87,15 +112,17 @@ export function Sidebar() {
               </div>
             </Link>
 
-            <Link href="/history" className={cn('flex items-center gap-3 px-2 py-2 rounded-md transition-colors group', pathname === '/history' ? 'bg-[#2a2a2a]' : 'hover:bg-[#1a1a1a]')}>
-              <div className="w-10 h-10 rounded-sm bg-[#333] flex items-center justify-center shrink-0">
-                <History className="w-5 h-5 text-[#B3B3B3]" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className={cn('text-[14px] font-bold truncate', pathname === '/history' ? 'text-[#FFD700]' : 'text-[#B3B3B3] group-hover:text-white')}>Recently Played</p>
-                <p className="text-[11px] text-[#6a6a6a] truncate">Playlist</p>
-              </div>
-            </Link>
+            {showRecentlyPlayed && (
+              <Link href="/history" className={cn('flex items-center gap-3 px-2 py-2 rounded-md transition-colors group', pathname === '/history' ? 'bg-[#2a2a2a]' : 'hover:bg-[#1a1a1a]')}>
+                <div className="w-10 h-10 rounded-sm bg-[#333] flex items-center justify-center shrink-0">
+                  <History className="w-5 h-5 text-[#B3B3B3]" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className={cn('text-[14px] font-bold truncate', pathname === '/history' ? 'text-[#FFD700]' : 'text-[#B3B3B3] group-hover:text-white')}>Recently Played</p>
+                  <p className="text-[11px] text-[#6a6a6a] truncate">Playlist</p>
+                </div>
+              </Link>
+            )}
           </div>
 
           {/* Custom Playlists */}

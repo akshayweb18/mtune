@@ -23,6 +23,8 @@
   --sidebar-bg: #000000;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
+  /* Mobile scroll pad: nav(60) + mini-player(56) + gaps(24) + buffer(16) = 156px */
+  --scroll-pad-mobile: 156px;
 }
 
 /* ─── GPU-accelerated base ─── */
@@ -48,6 +50,15 @@ body {
 main {
   -webkit-overflow-scrolling: touch;
   will-change: scroll-position;
+  /* Prevent bounce from blocking content at bottom */
+  overscroll-behavior-y: contain;
+}
+
+/* ─── Desktop: reset scroll pad to player height only ─── */
+@media (min-width: 768px) {
+  :root {
+    --scroll-pad-mobile: 100px; /* Desktop bottom player height */
+  }
 }
 
 /* ─── Performance: hardware acceleration for animated elements ─── */
