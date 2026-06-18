@@ -119,7 +119,7 @@ export default function ArtistsPage() {
   }, [searchQuery]);
 
   return (
-    <div className="min-h-full bg-[#05050f] pb-[140px]">
+    <div className="min-h-full bg-[#05050f]">
       {/* Hero Header */}
       <div className="relative overflow-hidden px-6 md:px-10 pt-8 pb-10">
         {/* Background blobs */}

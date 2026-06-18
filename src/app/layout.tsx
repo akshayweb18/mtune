@@ -51,22 +51,23 @@ export default function RootLayout({
               <Sidebar />
             </div>
             
-          {/* Main Content Area — scrolls naturally inside main */}
+            {/* Main Content Area — scrolls naturally inside main */}
             <main
               id="main-scroll"
               className="flex-1 w-full h-full overflow-y-auto"
               style={{
                 WebkitOverflowScrolling: 'touch',
                 overscrollBehaviorY: 'contain',
-                /*
-                 * Mobile: bottomNav(60px) + miniPlayer(56px) + gaps(16px) + extra(16px) = 148px
-                 * Desktop: DesktopBottomPlayer(90px) + gap(16px) = 106px  → use 140px for safety
-                 * Safe-area adds notch/home-bar height
-                 */
-                paddingBottom: 'calc(var(--scroll-pad-mobile, 156px) + env(safe-area-inset-bottom, 0px))',
               }}
             >
-              {children}
+              <div
+                className="min-h-full"
+                style={{
+                  paddingBottom: 'calc(var(--scroll-pad-mobile, 156px) + env(safe-area-inset-bottom, 0px))',
+                }}
+              >
+                {children}
+              </div>
             </main>
             
             {/* Desktop Right Player Sidebar */}
