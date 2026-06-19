@@ -8,6 +8,7 @@ import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { MobilePlayer } from "@/components/layout/MobilePlayer";
 import { AudioEngine } from "@/components/player/AudioEngine";
 import { DesktopBottomPlayer } from "@/components/player/DesktopBottomPlayer";
+import AvatarDropdown from "@/components/profile/AvatarDropdown";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -15,8 +16,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Musical App | Premium Streaming",
-  description: "Spotify-inspired premium music streaming app with Saavn API",
+  title: "mTune | Premium Music Streaming",
+  description: "mTune — a world-class music streaming experience.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -50,7 +51,7 @@ export default function RootLayout({
             <div className="hidden md:block h-full z-10 shrink-0">
               <Sidebar />
             </div>
-            
+
             {/* Main Content Area — scrolls naturally inside main */}
             <main
               id="main-scroll"
@@ -69,7 +70,7 @@ export default function RootLayout({
                 {children}
               </div>
             </main>
-            
+
             {/* Desktop Right Player Sidebar */}
             <div className="hidden lg:block h-full z-10 shrink-0">
               <RightPlayer />
@@ -85,6 +86,11 @@ export default function RootLayout({
 
           {/* Audio Engine (invisible) */}
           <AudioEngine />
+
+          {/* Floating avatar — top-right, only shows when authenticated */}
+          <div className="avatar-dropdown-portal">
+            <AvatarDropdown />
+          </div>
         </Providers>
       </body>
     </html>

@@ -389,19 +389,11 @@ export default function Home() {
       {/* Ã¢â€â‚¬Ã¢â€â‚¬ Mobile Header Ã¢â€â‚¬Ã¢â€â‚¬ */}
       <div className="md:hidden flex items-center justify-between px-4 pt-[max(env(safe-area-inset-top,16px),16px)] pb-3">
         <h1 className="text-[22px] font-bold text-white">{getGreeting()}</h1>
-        <div className="flex gap-3">
-          <div className="w-9 h-9 rounded-full bg-[#535353] overflow-hidden cursor-pointer flex items-center justify-center">
-            <span className="text-[14px] font-bold text-white">A</span>
-          </div>
-        </div>
       </div>
 
       {/* Ã¢â€â‚¬Ã¢â€â‚¬ Desktop Header Ã¢â€â‚¬Ã¢â€â‚¬ */}
       <div className="hidden md:flex items-center justify-between px-8 pt-8 pb-4">
         <h1 className="text-[32px] font-black text-white tracking-tight">{getGreeting()}</h1>
-        <div className="w-9 h-9 rounded-full overflow-hidden cursor-pointer hover:scale-105 transition-transform bg-[#535353] flex items-center justify-center">
-          <span className="text-[14px] font-bold text-white">A</span>
-        </div>
       </div>
 
       {/* Ã¢â€â‚¬Ã¢â€â‚¬ Language Filter Bar (sticky) Ã¢â€â‚¬Ã¢â€â‚¬ */}
