@@ -1,9 +1,4 @@
-// Auth layout bypasses the main app shell (Sidebar, Players, etc.)
-// This gives us a full-screen canvas for the premium auth experience
+// Auth layout — AppShell in root layout already skips sidebar/players for /auth routes
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="auth-shell">
-      {children}
-    </div>
-  );
+  return <>{children}</>;
 }

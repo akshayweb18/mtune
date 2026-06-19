@@ -183,11 +183,11 @@ img {
   html { scroll-behavior: auto; }
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• 
    AUTH SYSTEM â€” Premium Glassmorphism Authentication UI
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+   â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â•  */
 
-/* â”€â”€â”€ Auth shell: full-screen, bypasses main app layout â”€â”€â”€ */
+/* --- Auth shell: legacy class kept for safety --- */
 .auth-shell {
   position: fixed;
   inset: 0;
@@ -195,15 +195,16 @@ img {
   background: #050508;
 }
 
-/* â”€â”€â”€ Auth page â”€â”€â”€ */
+/* --- Auth page --- */
 .auth-page {
-  position: relative;
-  width: 100%;
-  height: 100dvh;
-  overflow: hidden;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #050508;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 /* â”€â”€â”€ Aurora Background â”€â”€â”€ */
