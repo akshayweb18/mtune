@@ -44,7 +44,17 @@ export function AudioEngine() {
     };
 
     const handleLoadedMetadata = () => setDuration(audio.duration);
-    const handleEnded = () => next();
+    const handleEnded = () => {
+      const isLooping = usePlayerStore.getState().isLooping;
+      if (isLooping) {
+        if (audio) {
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+        }
+      } else {
+        usePlayerStore.getState().next();
+      }
+    };
     const handleError = () => {
       console.error('Audio error for:', audio.src);
     };

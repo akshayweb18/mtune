@@ -7,34 +7,7 @@ import { Mic2, CheckCircle2, Search } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
-const POPULAR_ARTISTS = [
-  'AP Dhillon', 'AR Rahman', 'Alka Yagnik', 'Arijit Singh', 'Armaan Malik', 'Atif Aslam',
-  'B Praak', 'Badshah', 'Bappi Lahiri', 'Benny Dayal',
-  'Charlie Puth', 'Coldplay',
-  'Darshan Raval', 'Diljit Dosanjh', 'Divine', 'Dua Lipa',
-  'Ed Sheeran', 'Eminem',
-  'Falak Shabir', 'Farhan Akhtar',
-  'Gajendra Verma', 'Guru Randhawa',
-  'Harrdy Sandhu', 'Himesh Reshammiya',
-  'Imagine Dragons', 'Imran Khan',
-  'Javed Ali', 'Jubin Nautiyal', 'Justin Bieber',
-  'KK', 'Kailash Kher', 'Kishore Kumar', 'Kumar Sanu',
-  'Lata Mangeshkar', 'Lucky Ali',
-  'Mika Singh', 'Mohit Chauhan', 'Mukesh',
-  'Neeti Mohan', 'Neha Kakkar', 'Nusrat Fateh Ali Khan',
-  'One Direction',
-  'Papon', 'Post Malone', 'Prateek Kuhad', 'Pritam',
-  'Qurat-ul-Ain Balouch',
-  'Raftaar', 'Rahat Fateh Ali Khan', 'Rihanna',
-  'Shankar Mahadevan', 'Shreya Ghoshal', 'Sidhu Moose Wala', 'Sonu Nigam', 'Sunidhi Chauhan',
-  'Taylor Swift', 'The Weeknd', 'Tulsi Kumar',
-  'Udit Narayan',
-  'Vishal Dadlani', 'Vishal Mishra',
-  'Wiz Khalifa',
-  'XXXTentacion',
-  'Yo Yo Honey Singh',
-  'Zayn', 'Zubeen Garg'
-].sort((a, b) => a.localeCompare(b));
+import { POPULAR_ARTISTS_DATA } from '@/data/popular_artists';
 
 function ArtistCardSkeleton() {
   return (
@@ -46,22 +19,23 @@ function ArtistCardSkeleton() {
   );
 }
 
-function ArtistCard({ name, index }: { name: string; index: number }) {
+function ArtistCard({ name, index, artistData }: { name: string; index: number; artistData?: any }) {
   const { data, isLoading } = useQuery({
     queryKey: ['artist-search', name],
     queryFn: () => saavnApi.searchArtists(name, 1, 1),
+    enabled: !artistData, // Only fetch if we don't have pre-fetched data
   });
 
-  if (isLoading) return <ArtistCardSkeleton />;
+  if (!artistData && isLoading) return <ArtistCardSkeleton />;
 
-  const artist = data?.results?.[0];
+  const artist = artistData || data?.results?.[0];
   if (!artist) return null;
 
   const imgUrl =
     artist.image?.[2]?.url ||
     artist.image?.[1]?.url ||
     artist.image?.[0]?.url ||
-    `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=7c3aed&color=fff&size=200`;
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(artist.name || artist.title || name)}&background=7c3aed&color=fff&size=200`;
 
   return (
     <Link
@@ -107,15 +81,15 @@ export default function ArtistsPage() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const displayArtists = useMemo(() => {
-    if (!searchQuery.trim()) return POPULAR_ARTISTS;
+    if (!searchQuery.trim()) return POPULAR_ARTISTS_DATA;
     
-    const filtered = POPULAR_ARTISTS.filter(a => 
-      a.toLowerCase().includes(searchQuery.toLowerCase())
+    const filtered = POPULAR_ARTISTS_DATA.filter(a => 
+      a.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
     
     // If no match in the popular list, just pass the query directly to the ArtistCard 
     // so it fetches the artist from the API
-    return filtered.length > 0 ? filtered : [searchQuery.trim()];
+    return filtered.length > 0 ? filtered : [{ name: searchQuery.trim(), id: 'search' }];
   }, [searchQuery]);
 
   return (
@@ -158,8 +132,13 @@ export default function ArtistsPage() {
       {/* Artists Grid */}
       <div className="px-4 md:px-10 mt-2">
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-x-4 gap-y-8">
-          {displayArtists.map((name, index) => (
-            <ArtistCard key={name + index} name={name} index={index} />
+          {displayArtists.map((artistInfo, index) => (
+            <ArtistCard 
+              key={artistInfo.id + index} 
+              name={artistInfo.name} 
+              index={index} 
+              artistData={artistInfo.id !== 'search' ? artistInfo : undefined} 
+            />
           ))}
         </div>
       </div>

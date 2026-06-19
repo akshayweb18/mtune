@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { saavnApi } from '@/services/api';
@@ -267,10 +267,17 @@ export default function Home() {
   const setCurrentSong = usePlayerStore((s) => s.setCurrentSong);
   const setQueue = usePlayerStore((s) => s.setQueue);
   const [selectedLang, setSelectedLang] = useState('all');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const lang = LANGUAGES.find((l) => l.id === selectedLang) || LANGUAGES[0];
 
   const getGreeting = () => {
+    if (!mounted) return <span>Good evening 🎧</span>;
+
     const h = new Date().getHours();
     let greeting = '';
 

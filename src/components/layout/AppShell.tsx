@@ -63,10 +63,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Audio Engine (invisible) */}
       <AudioEngine />
 
-      {/* Floating avatar — top-right, only shows when authenticated */}
-      <div className="avatar-dropdown-portal">
-        <AvatarDropdown />
-      </div>
+      {/* Floating avatar — top-right, only shows when authenticated and only on home page */}
+      {pathname === '/' && (
+        <div className="avatar-dropdown-portal">
+          <AvatarDropdown />
+        </div>
+      )}
     </>
   );
 }
