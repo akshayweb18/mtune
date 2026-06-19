@@ -10,32 +10,32 @@ import { useRef } from 'react';
 import { cn } from '@/lib/utils';
 
 export function DesktopBottomPlayer() {
-  const currentSong   = usePlayerStore((s) => s.currentSong);
-  const isPlaying     = usePlayerStore((s) => s.isPlaying);
-  const togglePlay    = usePlayerStore((s) => s.togglePlay);
-  const volume        = usePlayerStore((s) => s.volume);
-  const setVolume     = usePlayerStore((s) => s.setVolume);
-  const isMuted       = usePlayerStore((s) => s.isMuted);
-  const toggleMute    = usePlayerStore((s) => s.toggleMute);
-  const progress      = usePlayerStore((s) => s.progress);
-  const duration      = usePlayerStore((s) => s.duration);
-  const setProgress   = usePlayerStore((s) => s.setProgress);
-  const next          = usePlayerStore((s) => s.next);
-  const previous      = usePlayerStore((s) => s.previous);
-  const isLooping     = usePlayerStore((s) => s.isLooping);
-  const toggleLoop    = usePlayerStore((s) => s.toggleLoop);
-  const isShuffling   = usePlayerStore((s) => s.isShuffling);
+  const currentSong = usePlayerStore((s) => s.currentSong);
+  const isPlaying = usePlayerStore((s) => s.isPlaying);
+  const togglePlay = usePlayerStore((s) => s.togglePlay);
+  const volume = usePlayerStore((s) => s.volume);
+  const setVolume = usePlayerStore((s) => s.setVolume);
+  const isMuted = usePlayerStore((s) => s.isMuted);
+  const toggleMute = usePlayerStore((s) => s.toggleMute);
+  const progress = usePlayerStore((s) => s.progress);
+  const duration = usePlayerStore((s) => s.duration);
+  const setProgress = usePlayerStore((s) => s.setProgress);
+  const next = usePlayerStore((s) => s.next);
+  const previous = usePlayerStore((s) => s.previous);
+  const isLooping = usePlayerStore((s) => s.isLooping);
+  const toggleLoop = usePlayerStore((s) => s.toggleLoop);
+  const isShuffling = usePlayerStore((s) => s.isShuffling);
   const toggleShuffle = usePlayerStore((s) => s.toggleShuffle);
   const { isLiked, toggleLike } = useLibraryStore();
 
   const progressBarRef = useRef<HTMLDivElement>(null);
-  const volumeBarRef   = useRef<HTMLDivElement>(null);
+  const volumeBarRef = useRef<HTMLDivElement>(null);
 
   if (!currentSong) return null;
 
-  const liked       = isLiked(currentSong.id);
+  const liked = isLiked(currentSong.id);
   const progressPct = duration > 0 ? (progress / duration) * 100 : 0;
-  const volumePct   = (isMuted ? 0 : volume) * 100;
+  const volumePct = (isMuted ? 0 : volume) * 100;
 
   const fmt = (t: number) => {
     const m = Math.floor(t / 60);
@@ -46,7 +46,7 @@ export function DesktopBottomPlayer() {
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!progressBarRef.current || !duration) return;
     const rect = progressBarRef.current.getBoundingClientRect();
-    const pct  = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     const newTime = pct * duration;
     setProgress(newTime);
     const audio = (window as any).__audioElement;
@@ -56,7 +56,7 @@ export function DesktopBottomPlayer() {
   const handleVolumeClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!volumeBarRef.current) return;
     const rect = volumeBarRef.current.getBoundingClientRect();
-    const pct  = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     setVolume(pct);
     if (isMuted && pct > 0) toggleMute();
   };
