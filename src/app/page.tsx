@@ -538,7 +538,7 @@ export default function Home() {
       if (usedIds.has(s.id) || (img && usedImgs.has(img))) continue;
       
       // Exclude specific unwanted songs
-      const titleLower = (s.name || s.title || '').toLowerCase();
+      const titleLower = (s.name || (s as any).title || '').toLowerCase();
       if (titleLower.includes('mere hussain') || titleLower.includes('naat')) continue;
 
       usedIds.add(s.id);
