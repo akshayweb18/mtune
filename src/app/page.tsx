@@ -9,6 +9,7 @@ import { Song } from '@/types';
 import { Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
+import { POPULAR_ARTISTS_DATA } from '@/data/popular_artists';
 
 // ── Language Filter Config ──────────────────────────────────────────────────
 
@@ -333,6 +334,59 @@ export default function Home() {
     staleTime: 10 * 60 * 1000,
   });
 
+  const { data: moreArtistsData } = useQuery({
+    queryKey: ['home-artists-more', selectedLang],
+    queryFn: () => saavnApi.searchArtists(
+      selectedLang === 'all'
+        ? 'sonu nigam atif aslam neha kakkar badshah yo yo honey singh'
+        : `${lang.label} popular artist`,
+      1, 20
+    ),
+    staleTime: 10 * 60 * 1000,
+  });
+
+  const { data: evenMoreArtistsData } = useQuery({
+    queryKey: ['home-artists-even-more', selectedLang],
+    queryFn: () => saavnApi.searchArtists(
+      selectedLang === 'all'
+        ? 'armaan malik jubin nautiyal darshan raval guru randhawa'
+        : `${lang.label} singer popular`,
+      1, 20
+    ),
+    staleTime: 10 * 60 * 1000,
+  });
+
+  const { data: extraArtistsData } = useQuery({
+    queryKey: ['home-artists-extra', selectedLang],
+    queryFn: () => saavnApi.searchArtists(
+      selectedLang === 'all'
+        ? 'kumar sanu udit narayan lata mangeshkar asha bhosle kishore kumar'
+        : `${lang.label} best singer`,
+      1, 20
+    ),
+    staleTime: 10 * 60 * 1000,
+  });
+
+  const { data: bonusArtistsData } = useQuery({
+    queryKey: ['home-artists-bonus', selectedLang],
+    queryFn: () => saavnApi.searchArtists(
+      selectedLang === 'all'
+        ? 'ap dhillon diljit dosanjh jasleen royal pritam shankar mahadevan'
+        : `${lang.label} music artist`,
+      1, 20
+    ),
+    staleTime: 10 * 60 * 1000,
+  });
+
+  const { data: specificArtistsData } = useQuery({
+    queryKey: ['home-artists-specific'],
+    queryFn: () => saavnApi.searchArtists(
+      'alka yagnik ar rahman bappi lahiri',
+      1, 20
+    ),
+    staleTime: 30 * 60 * 1000,
+  });
+
   const { data: playlistsData, isLoading: playlistsLoading } = useQuery({
     queryKey: ['home-playlists', selectedLang],
     queryFn: () => saavnApi.searchPlaylists(lang.playlistQuery, 1, 10),
@@ -581,7 +635,33 @@ export default function Home() {
   const topHits2025 = dedup(topHits2025Data?.results || []);
 
   const albums = albumsData?.results || [];
-  const artists = artistsData?.results || [];
+
+  // For 'All' tab: use static POPULAR_ARTISTS_DATA (has correct images for all artists)
+  // For language-specific tabs: merge API results
+  let artists: any[];
+  if (selectedLang === 'all') {
+    // Filter to only those with a valid real image
+    artists = POPULAR_ARTISTS_DATA.filter((a) => {
+      const img = a.image?.[2]?.url || a.image?.[1]?.url || a.image?.[0]?.url || '';
+      return img && !img.includes('jiosaavn.com/_i') && !img.includes('default');
+    });
+  } else {
+    const allArtistsRaw = [
+      ...(artistsData?.results || []),
+      ...(moreArtistsData?.results || []),
+      ...(evenMoreArtistsData?.results || []),
+      ...(extraArtistsData?.results || []),
+      ...(bonusArtistsData?.results || []),
+      ...(specificArtistsData?.results || []),
+    ];
+    const seenArtistIds = new Set<string>();
+    artists = allArtistsRaw.filter((a: any) => {
+      if (seenArtistIds.has(a.id)) return false;
+      seenArtistIds.add(a.id);
+      const img = a.image?.[2]?.url || a.image?.[1]?.url || a.image?.[0]?.url || '';
+      return img && !img.includes('jiosaavn.com/_i') && !img.includes('default');
+    });
+  }
   const playlists = playlistsData?.results || [];
 
   const playSong = (song: Song, queue: Song[]) => {
@@ -777,22 +857,27 @@ export default function Home() {
                       ? '🎤 Popular Artists'
                       : `🎤 Popular ${lang.label} Artists`
                   }
-                  href={`/search?q=${encodeURIComponent(lang.artistQuery)}`}
+                  href="/artists"
                 />
                 <div className="flex overflow-x-auto gap-4 md:gap-5 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 snap-x pb-2">
-                  {artists.map((artist: any) => {
-                    const img = artist.image?.[2]?.url || artist.image?.[0]?.url || '';
-                    return (
-                      <MediaCard
-                        key={artist.id}
-                        title={artist.name || artist.title || ''}
-                        subtitle="Artist"
-                        img={img}
-                        isArtist
-                        onClick={() => router.push(`/artist/${artist.id}`)}
-                      />
-                    );
-                  })}
+                  {artists
+                    .filter((artist: any) => {
+                      const img = artist.image?.[2]?.url || artist.image?.[1]?.url || artist.image?.[0]?.url || '';
+                      return img && img.trim() !== '' && !img.includes('default') && !img.includes('null') && !img.includes('jiosaavn.com/_i');
+                    })
+                    .map((artist: any) => {
+                      const img = artist.image?.[2]?.url || artist.image?.[1]?.url || artist.image?.[0]?.url || '';
+                      return (
+                        <MediaCard
+                          key={artist.id}
+                          title={artist.name || artist.title || ''}
+                          subtitle="Artist"
+                          img={img}
+                          isArtist
+                          onClick={() => router.push(`/artist/${artist.id}`)}
+                        />
+                      );
+                    })}
                 </div>
               </section>
             )}

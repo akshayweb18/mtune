@@ -38,6 +38,7 @@ interface PlayerState {
   setExpanded: (expanded: boolean) => void;
   dismissAuthPopup: () => void;
   setAuthenticated: (value: boolean) => void;
+  resetPlayer: () => void;
 }
 
 export const usePlayerStore = create<PlayerState>((set, get) => ({
@@ -88,6 +89,16 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     isAuthenticated: value,
     showAuthPopup: false,
     popupDismissed: true,
+  }),
+
+  resetPlayer: () => set({
+    currentSong: null,
+    queue: [],
+    isPlaying: false,
+    progress: 0,
+    duration: 0,
+    songsPlayedCount: 0,
+    showAuthPopup: false,
   }),
 
   setQueue: (queue) => set({ queue }),

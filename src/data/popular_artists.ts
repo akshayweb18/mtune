@@ -1,5 +1,41 @@
 export const POPULAR_ARTISTS_DATA = [
   {
+    "id": "459320",
+    "name": "Arijit Singh",
+    "image": [
+      {
+        "quality": "50x50",
+        "url": "https://c.saavncdn.com/artists/Arijit_Singh_004_20241118063717_50x50.jpg"
+      },
+      {
+        "quality": "150x150",
+        "url": "https://c.saavncdn.com/artists/Arijit_Singh_004_20241118063717_150x150.jpg"
+      },
+      {
+        "quality": "500x500",
+        "url": "https://c.saavncdn.com/artists/Arijit_Singh_004_20241118063717_500x500.jpg"
+      }
+    ]
+  },
+  {
+    "id": "455130",
+    "name": "Shreya Ghoshal",
+    "image": [
+      {
+        "quality": "50x50",
+        "url": "https://c.saavncdn.com/artists/Shreya_Ghoshal_007_20241101074144_50x50.jpg"
+      },
+      {
+        "quality": "150x150",
+        "url": "https://c.saavncdn.com/artists/Shreya_Ghoshal_007_20241101074144_150x150.jpg"
+      },
+      {
+        "quality": "500x500",
+        "url": "https://c.saavncdn.com/artists/Shreya_Ghoshal_007_20241101074144_500x500.jpg"
+      }
+    ]
+  },
+  {
     "id": "455120",
     "name": "Alka Yagnik",
     "image": [
@@ -50,24 +86,6 @@ export const POPULAR_ARTISTS_DATA = [
       {
         "quality": "500x500",
         "url": "https://c.saavncdn.com/artists/AR_Rahman_002_20210120084455_500x500.jpg"
-      }
-    ]
-  },
-  {
-    "id": "459320",
-    "name": "Arijit Singh",
-    "image": [
-      {
-        "quality": "50x50",
-        "url": "https://c.saavncdn.com/artists/Arijit_Singh_004_20241118063717_50x50.jpg"
-      },
-      {
-        "quality": "150x150",
-        "url": "https://c.saavncdn.com/artists/Arijit_Singh_004_20241118063717_150x150.jpg"
-      },
-      {
-        "quality": "500x500",
-        "url": "https://c.saavncdn.com/artists/Arijit_Singh_004_20241118063717_500x500.jpg"
       }
     ]
   },
@@ -917,24 +935,7 @@ export const POPULAR_ARTISTS_DATA = [
       }
     ]
   },
-  {
-    "id": "455130",
-    "name": "Shreya Ghoshal",
-    "image": [
-      {
-        "quality": "50x50",
-        "url": "https://c.saavncdn.com/artists/Shreya_Ghoshal_007_20241101074144_50x50.jpg"
-      },
-      {
-        "quality": "150x150",
-        "url": "https://c.saavncdn.com/artists/Shreya_Ghoshal_007_20241101074144_150x150.jpg"
-      },
-      {
-        "quality": "500x500",
-        "url": "https://c.saavncdn.com/artists/Shreya_Ghoshal_007_20241101074144_500x500.jpg"
-      }
-    ]
-  },
+
   {
     "id": "3319750",
     "name": "Sidhu Moose Wala",
