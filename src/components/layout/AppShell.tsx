@@ -6,7 +6,6 @@ import { RightPlayer } from '@/components/layout/RightPlayer';
 import { MobileBottomNav } from '@/components/layout/MobileBottomNav';
 import { MobilePlayer } from '@/components/layout/MobilePlayer';
 import { AudioEngine } from '@/components/player/AudioEngine';
-import { DesktopBottomPlayer } from '@/components/player/DesktopBottomPlayer';
 import AvatarDropdown from '@/components/profile/AvatarDropdown';
 import { ToastContainer } from '@/components/shared/Toast';
 import { useEdgeSwipeBack } from '@/hooks/useEdgeSwipeBack';
@@ -67,9 +66,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <RightPlayer />
         </div>
       </div>
-
-      {/* Desktop Bottom Player Bar */}
-      <DesktopBottomPlayer />
 
       {/* Mobile Specific — Mini Player + Bottom Nav */}
       <MobilePlayer />

@@ -50,10 +50,10 @@ export default function PlaylistPage() {
   if (!playlist) return <div className="p-8 text-white flex justify-center py-20 text-xl font-bold">Playlist not found</div>;
 
   const songs: Song[] = playlist.songs || [];
-  
+
   // Custom playlists might not have an image property directly on the playlist object
-  const img = isCustom 
-    ? (songs[0]?.image?.[2]?.url || songs[0]?.image?.[0]?.url || '') 
+  const img = isCustom
+    ? (songs[0]?.image?.[2]?.url || songs[0]?.image?.[0]?.url || '')
     : (playlist as any).image?.[2]?.url || (playlist as any).image?.[0]?.url;
 
   const handlePlaySong = (song: Song, index: number) => {
@@ -79,7 +79,7 @@ export default function PlaylistPage() {
       {/* Immersive Hero Header */}
       <div className="relative w-full h-[45vh] min-h-[350px] flex items-end p-6 md:p-10 z-10 overflow-hidden">
         {/* Background Image (Optimized: removed blur-2xl) */}
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 scale-110"
           style={{ backgroundImage: `url(${img})` }}
         />
@@ -88,13 +88,13 @@ export default function PlaylistPage() {
 
         <div className="relative z-10 flex flex-col md:flex-row items-center md:items-end gap-6 md:gap-8 w-full mt-10 md:mt-0">
           <div className="w-40 h-40 md:w-56 md:h-56 rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] shrink-0 border border-white/10 group">
-             {img ? (
-               <img src={img} alt={playlist.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-             ) : (
-               <div className="w-full h-full bg-white/10 flex items-center justify-center">
-                 <ListMusic className="w-12 h-12 text-white/40" />
-               </div>
-             )}
+            {img ? (
+              <img src={img} alt={playlist.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            ) : (
+              <div className="w-full h-full bg-white/10 flex items-center justify-center">
+                <ListMusic className="w-12 h-12 text-white/40" />
+              </div>
+            )}
           </div>
           <div className="flex flex-col flex-1 pb-2 items-center md:items-start text-center md:text-left">
             <span className="text-white/80 font-bold uppercase tracking-widest text-xs md:text-sm mb-2 drop-shadow-md">
@@ -104,12 +104,12 @@ export default function PlaylistPage() {
               {decodeHtml(playlist.name)}
             </h1>
             <p className="text-white/60 text-sm md:text-base font-medium flex items-center justify-center md:justify-start gap-2 flex-wrap">
-               <span className="text-white font-bold">{isCustom ? 'You' : 'Akshay Music'}</span>
-               • {(playlist as any).songCount || songs.length} songs
+              <span className="text-white font-bold">{isCustom ? 'You' : 'Akshay Music'}</span>
+              • {(playlist as any).songCount || songs.length} songs
             </p>
             {isCustom && (
               <div className="mt-4 flex justify-center md:justify-start">
-                <button 
+                <button
                   onClick={handleDeletePlaylist}
                   className="px-4 py-2 bg-white/10 hover:bg-red-500/80 text-white rounded-full text-sm font-bold backdrop-blur-md border border-white/20 transition flex items-center gap-2"
                 >
@@ -122,12 +122,12 @@ export default function PlaylistPage() {
 
         {/* Floating Neon Play Button */}
         <div className="absolute -bottom-8 right-8 md:right-12 z-20">
-           <button 
-             onClick={handlePlayAll}
-             className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-secondary to-primary flex items-center justify-center text-white shadow-[0_0_30px_rgba(236,72,153,0.6)] hover:scale-105 active:scale-95 transition-all"
-           >
-             <Play className="w-8 h-8 fill-current ml-1.5" />
-           </button>
+          <button
+            onClick={handlePlayAll}
+            className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-secondary to-primary flex items-center justify-center text-white shadow-[0_0_30px_rgba(236,72,153,0.6)] hover:scale-105 active:scale-95 transition-all"
+          >
+            <Play className="w-8 h-8 fill-current ml-1.5" />
+          </button>
         </div>
       </div>
 
@@ -145,9 +145,9 @@ export default function PlaylistPage() {
               const isActive = currentSong?.id === song.id;
               const isLikedSong = isLiked(song.id);
               const songImg = song.image?.[1]?.url || song.image?.[0]?.url;
-              
+
               return (
-                <div 
+                <div
                   key={song.id}
                   onClick={() => handlePlaySong(song, index)}
                   className="flex items-center p-2 md:p-3 rounded-xl hover:bg-white/5 active:scale-95 transition-all group cursor-pointer"
@@ -179,25 +179,25 @@ export default function PlaylistPage() {
                   </div>
 
                   <div className="flex items-center shrink-0">
-                    <button 
+                    <button
                       onClick={(e) => { e.stopPropagation(); toggleLike(song); }}
                       className="p-2 text-white/40 hover:text-white hover:scale-110 transition-all hidden md:block"
                     >
                       <Heart className={cn("w-5 h-5 transition-colors", isLikedSong ? "fill-secondary text-secondary drop-shadow-[0_0_10px_rgba(236,72,153,0.6)]" : "")} />
                     </button>
 
-                    <SongContextMenu 
-                      song={song} 
-                      queue={songs} 
-                      className="md:opacity-0 md:group-hover:opacity-100" 
-                      iconClassName="w-10 h-10" 
+                    <SongContextMenu
+                      song={song}
+                      queue={songs}
+                      className="md:opacity-0 md:group-hover:opacity-100"
+                      iconClassName="w-10 h-10"
                     />
 
                     {isCustom && (
-                      <button 
-                        onClick={(e) => { 
-                          e.stopPropagation(); 
-                          removeSongFromPlaylist(id as string, song.id); 
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeSongFromPlaylist(id as string, song.id);
                         }}
                         className="w-10 h-10 flex items-center justify-center text-white/40 hover:text-red-400 transition"
                         title="Remove from playlist"
@@ -217,10 +217,10 @@ export default function PlaylistPage() {
         </div>
       </div>
 
-      <AddToPlaylistModal 
-        isOpen={!!selectedSongForPlaylist} 
-        onClose={() => setSelectedSongForPlaylist(null)} 
-        song={selectedSongForPlaylist} 
+      <AddToPlaylistModal
+        isOpen={!!selectedSongForPlaylist}
+        onClose={() => setSelectedSongForPlaylist(null)}
+        song={selectedSongForPlaylist}
       />
     </div>
   );

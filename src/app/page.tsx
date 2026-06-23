@@ -267,9 +267,21 @@ export default function Home() {
   const setCurrentSong = usePlayerStore((s) => s.setCurrentSong);
   const setQueue = usePlayerStore((s) => s.setQueue);
   const [selectedLang, setSelectedLang] = useState('all');
+  const [greetingText, setGreetingText] = useState('Good evening');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    const h = new Date().getHours();
+    if (h < 12) {
+      const mornings = ['Rise and shine', 'Morning vibes', 'Ready for some tunes', 'Good morning'];
+      setGreetingText(mornings[Math.floor(Math.random() * mornings.length)]);
+    } else if (h < 17) {
+      const afternoons = ['Afternoon rhythm', 'Mid-day grooves', 'Keep vibing', 'Good afternoon'];
+      setGreetingText(afternoons[Math.floor(Math.random() * afternoons.length)]);
+    } else {
+      const evenings = ['Evening chills', 'Night vibes', 'Time to unwind', 'Good evening'];
+      setGreetingText(evenings[Math.floor(Math.random() * evenings.length)]);
+    }
     setMounted(true);
   }, []);
 
@@ -278,29 +290,15 @@ export default function Home() {
   const getGreeting = () => {
     if (!mounted) return <span>Good evening 🎧</span>;
 
-    const h = new Date().getHours();
-    let greeting = '';
-
-    if (h < 12) {
-      const mornings = ['Rise and shine', 'Morning vibes', 'Ready for some tunes', 'Good morning'];
-      greeting = mornings[Math.floor(Math.random() * mornings.length)];
-    } else if (h < 17) {
-      const afternoons = ['Afternoon rhythm', 'Mid-day grooves', 'Keep vibing', 'Good afternoon'];
-      greeting = afternoons[Math.floor(Math.random() * afternoons.length)];
-    } else {
-      const evenings = ['Evening chills', 'Night vibes', 'Time to unwind', 'Good evening'];
-      greeting = evenings[Math.floor(Math.random() * evenings.length)];
-    }
-
     if (user && user.displayName) {
       const firstName = user.displayName.split(' ')[0];
       return (
         <span>
-          {greeting}, <span className="text-[#FFD700]">{firstName}</span> ✨
+          {greetingText}, <span className="text-[#FFD700]">{firstName}</span> ✨
         </span>
       );
     }
-    return <span>{greeting} 🎧</span>;
+    return <span>{greetingText} 🎧</span>;
   };
 
   // ── API Queries ──

@@ -14,21 +14,21 @@ import { SleepTimer } from '@/components/player/SleepTimer';
 
 
 export function MobilePlayer() {
-  const currentSong   = usePlayerStore((s) => s.currentSong);
-  const isPlaying     = usePlayerStore((s) => s.isPlaying);
-  const togglePlay    = usePlayerStore((s) => s.togglePlay);
-  const progress      = usePlayerStore((s) => s.progress);
-  const duration      = usePlayerStore((s) => s.duration);
-  const isExpanded    = usePlayerStore((s) => s.isExpanded);
-  const setExpanded   = usePlayerStore((s) => s.setExpanded);
-  const setProgress   = usePlayerStore((s) => s.setProgress);
-  const next          = usePlayerStore((s) => s.next);
-  const previous      = usePlayerStore((s) => s.previous);
-  const isShuffling   = usePlayerStore((s) => s.isShuffling);
+  const currentSong = usePlayerStore((s) => s.currentSong);
+  const isPlaying = usePlayerStore((s) => s.isPlaying);
+  const togglePlay = usePlayerStore((s) => s.togglePlay);
+  const progress = usePlayerStore((s) => s.progress);
+  const duration = usePlayerStore((s) => s.duration);
+  const isExpanded = usePlayerStore((s) => s.isExpanded);
+  const setExpanded = usePlayerStore((s) => s.setExpanded);
+  const setProgress = usePlayerStore((s) => s.setProgress);
+  const next = usePlayerStore((s) => s.next);
+  const previous = usePlayerStore((s) => s.previous);
+  const isShuffling = usePlayerStore((s) => s.isShuffling);
   const toggleShuffle = usePlayerStore((s) => s.toggleShuffle);
-  const isLooping     = usePlayerStore((s) => s.isLooping);
-  const toggleLoop    = usePlayerStore((s) => s.toggleLoop);
-  const queue         = usePlayerStore((s) => s.queue);
+  const isLooping = usePlayerStore((s) => s.isLooping);
+  const toggleLoop = usePlayerStore((s) => s.toggleLoop);
+  const queue = usePlayerStore((s) => s.queue);
   const { isLiked, toggleLike } = useLibraryStore();
 
   const progressBarRef = useRef<HTMLDivElement>(null);
@@ -38,9 +38,9 @@ export function MobilePlayer() {
 
   if (!currentSong) return null;
 
-  const liked       = isLiked(currentSong.id);
+  const liked = isLiked(currentSong.id);
   const progressPct = duration > 0 ? (progress / duration) * 100 : 0;
-  const img         = currentSong.image?.[2]?.url || currentSong.image?.[0]?.url;
+  const img = currentSong.image?.[2]?.url || currentSong.image?.[0]?.url;
   const artistNames = decodeHtml(currentSong.artists?.primary?.map(a => a.name).join(', ') || 'Unknown Artist');
 
   const fmt = (t: number) => {

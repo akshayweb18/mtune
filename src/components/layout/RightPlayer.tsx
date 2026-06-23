@@ -24,13 +24,13 @@ export function RightPlayer() {
   };
 
   return (
-    <div 
+    <div
       className={cn(
         "hidden xl:flex h-full transition-[width] duration-500 ease-in-out overflow-hidden shrink-0",
         isOpen ? "w-[320px]" : "w-0"
       )}
     >
-      <aside 
+      <aside
         className={cn(
           "flex flex-col w-[320px] h-full bg-[#121212] border-l border-white/[0.06] overflow-y-auto pb-[110px] shrink-0 scrollbar-hide transition-transform duration-500 ease-in-out",
           isOpen ? "translate-x-0" : "translate-x-full"
