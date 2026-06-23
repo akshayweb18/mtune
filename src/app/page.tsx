@@ -531,8 +531,15 @@ export default function Home() {
     staleTime: 10 * 60 * 1000,
   });
 
-  // ── Helper ──
+  // ── Helpers ──
   const getImg = (s: Song) => s.image?.[2]?.url || s.image?.[1]?.url || s.image?.[0]?.url || '';
+  const decodeHtml = (str: string) => str
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;/g, "'")
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+
 
   // ── Sequential deduplication — each section gets fresh unique songs ──
   const usedIds = new Set<string>();
@@ -609,8 +616,8 @@ export default function Home() {
             return (
               <MediaCard
                 key={song.id}
-                title={song.name}
-                subtitle={artistNames}
+                title={decodeHtml(song.name)}
+                subtitle={decodeHtml(artistNames)}
                 img={img}
                 onClick={() => playSong(song, list)}
               />

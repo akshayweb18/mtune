@@ -102,7 +102,10 @@ export default function ArtistPage() {
     );
   }
 
-  const artistImg = artist?.image?.[2]?.url || artist?.image?.[1]?.url || artist?.image?.[0]?.url;
+  const rawArtistImg = artist?.image?.[2]?.url || artist?.image?.[1]?.url || artist?.image?.[0]?.url;
+  const artistImg = (!rawArtistImg || rawArtistImg.includes('default') || rawArtistImg.includes('artist-default'))
+    ? `https://ui-avatars.com/api/?name=${encodeURIComponent(artist?.name || 'A')}&background=FFD700&color=000&size=512&font-size=0.4`
+    : rawArtistImg;
   const isThisArtistPlaying = currentSong?.artists?.primary?.some((a: any) => a.id === artist?.id);
   const displaySongs = showAll ? topSongs : topSongs.slice(0, 10);
 

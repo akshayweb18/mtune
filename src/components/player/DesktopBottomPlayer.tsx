@@ -8,6 +8,8 @@ import {
 } from 'lucide-react';
 import { useRef } from 'react';
 import { cn } from '@/lib/utils';
+import { showToast } from '@/components/shared/Toast';
+
 
 export function DesktopBottomPlayer() {
   const currentSong = usePlayerStore((s) => s.currentSong);
@@ -89,7 +91,11 @@ export function DesktopBottomPlayer() {
         </div>
 
         <button
-          onClick={() => toggleLike(currentSong)}
+          onClick={() => {
+            const wasLiked = liked;
+            toggleLike(currentSong);
+            showToast(wasLiked ? 'Removed from Liked Songs' : 'Added to Liked Songs', 'success');
+          }}
           className={cn('shrink-0 p-1.5 transition-all hover:scale-110', liked ? 'text-[#FFD700]' : 'text-[#A7A7A7] hover:text-white')}
         >
           <Heart className={cn('w-4 h-4', liked ? 'fill-current' : '')} />

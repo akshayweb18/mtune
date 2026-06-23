@@ -1,10 +1,11 @@
 'use client';
 
-import { X, Plus, Music } from 'lucide-react';
+import { X, Plus, Music, Check } from 'lucide-react';
 import { useLibraryStore } from '@/store/useLibraryStore';
 import { Song } from '@/types';
 import { CreatePlaylistModal } from './CreatePlaylistModal';
 import { useState } from 'react';
+import { showToast } from './Toast';
 
 interface AddToPlaylistModalProps {
   isOpen: boolean;
@@ -20,9 +21,10 @@ export function AddToPlaylistModal({ isOpen, onClose, song }: AddToPlaylistModal
   if (!isOpen || !song) return null;
 
   const handleAddToPlaylist = (playlistId: string) => {
-    addSongToPlaylist(playlistId, song);
+    addSongToPlaylist(playlistId, song!);
+    const pl = customPlaylists.find(p => p.id === playlistId);
+    showToast(`Added to "${pl?.name || 'playlist'}"`, 'success');
     onClose();
-    // In a real app we might show a toast here.
   };
 
   return (

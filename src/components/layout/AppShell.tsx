@@ -8,6 +8,7 @@ import { MobilePlayer } from '@/components/layout/MobilePlayer';
 import { AudioEngine } from '@/components/player/AudioEngine';
 import { DesktopBottomPlayer } from '@/components/player/DesktopBottomPlayer';
 import AvatarDropdown from '@/components/profile/AvatarDropdown';
+import { ToastContainer } from '@/components/shared/Toast';
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -63,12 +64,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Audio Engine (invisible) */}
       <AudioEngine />
 
-      {/* Floating avatar — top-right, only shows when authenticated and only on home page */}
-      {pathname === '/' && (
-        <div className="avatar-dropdown-portal">
-          <AvatarDropdown />
-        </div>
-      )}
+      {/* Floating avatar — top-right, shown on all non-auth pages */}
+      <div className="avatar-dropdown-portal">
+        <AvatarDropdown />
+      </div>
+
+      {/* Global Toast Notifications */}
+      <ToastContainer />
     </>
   );
 }

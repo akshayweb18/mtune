@@ -2,12 +2,14 @@
 
 import { usePlayerStore } from '@/store/usePlayerStore';
 import {
-  Play, Pause, SkipBack, SkipForward, MoreVertical, Heart,
-  Shuffle, Repeat, ChevronDown, Share2
+  Play, Pause, SkipBack, SkipForward, Heart,
+  Shuffle, Repeat, ChevronDown, ListPlus, ListMusic, X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useRef, useState } from 'react';
 import { useLibraryStore } from '@/store/useLibraryStore';
+import { AddToPlaylistModal } from '@/components/shared/AddToPlaylistModal';
+import { showToast } from '@/components/shared/Toast';
 
 export function MobilePlayer() {
   const currentSong   = usePlayerStore((s) => s.currentSong);
@@ -24,10 +26,13 @@ export function MobilePlayer() {
   const toggleShuffle = usePlayerStore((s) => s.toggleShuffle);
   const isLooping     = usePlayerStore((s) => s.isLooping);
   const toggleLoop    = usePlayerStore((s) => s.toggleLoop);
+  const queue         = usePlayerStore((s) => s.queue);
   const { isLiked, toggleLike } = useLibraryStore();
 
   const progressBarRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [showPlaylistModal, setShowPlaylistModal] = useState(false);
+  const [showQueue, setShowQueue] = useState(false);
 
   if (!currentSong) return null;
 
@@ -51,6 +56,12 @@ export function MobilePlayer() {
     setProgress(newTime);
     const audio = (window as any).__audioElement;
     if (audio) audio.currentTime = newTime;
+  };
+
+  const handleLike = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleLike(currentSong);
+    showToast(liked ? 'Removed from Liked Songs' : 'Added to Liked Songs', 'success');
   };
 
   // ── Mini Player (Spotify pill style) ──────────────────────────────────────
@@ -79,23 +90,29 @@ export function MobilePlayer() {
           {/* Controls */}
           <div className="flex items-center gap-1 shrink-0" onClick={e => e.stopPropagation()}>
             <button
-              onClick={() => toggleLike(currentSong)}
+              onClick={handleLike}
               className="w-10 h-10 flex items-center justify-center"
             >
               <Heart className={cn('w-5 h-5', liked ? 'fill-[#FFD700] text-[#FFD700]' : 'text-[#B3B3B3]')} />
             </button>
             <button
-              onClick={togglePlay}
+              onClick={(e) => { e.stopPropagation(); togglePlay(); }}
               className="w-10 h-10 flex items-center justify-center text-[#FFD700]"
             >
               {isPlaying ? <Pause className="w-6 h-6 fill-current" /> : <Play className="w-6 h-6 fill-current" />}
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); next(); }}
+              className="w-10 h-10 flex items-center justify-center text-white"
+            >
+              <SkipForward className="w-5 h-5 fill-current" />
             </button>
           </div>
 
           {/* Bottom progress line */}
           <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#3a3a3a]">
             <div
-              className="h-full bg-white transition-all duration-300"
+              className="h-full bg-[#FFD700] transition-all duration-300"
               style={{ width: `${progressPct}%` }}
             />
           </div>
@@ -106,158 +123,193 @@ export function MobilePlayer() {
 
   // ── Full-Screen Player ─────────────────────────────────────────────────────
   return (
-    <div className="md:hidden fixed inset-0 z-[100] flex flex-col bg-[#121212]">
+    <>
+      <div className="md:hidden fixed inset-0 z-[100] flex flex-col bg-[#121212]">
 
-      {/* Dynamic blurred background from album art */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {img && (
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: `url(${img})`,
-              filter: 'blur(80px) saturate(2)',
-              transform: 'scale(1.3)',
-              opacity: 0.25,
-            }}
-          />
-        )}
-        {/* Dark gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-[#121212]/70 to-[#121212]" />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 flex flex-col flex-1 overflow-hidden">
-
-        {/* Header */}
-        <div
-          className="flex items-center justify-between px-4"
-          style={{ paddingTop: 'max(env(safe-area-inset-top, 16px), 16px)', paddingBottom: '8px' }}
-        >
-          <button
-            onClick={() => setExpanded(false)}
-            className="w-10 h-10 flex items-center justify-center text-white/80 active:opacity-60"
-          >
-            <ChevronDown className="w-8 h-8" />
-          </button>
-
-          <div className="text-center">
-            <p className="text-[11px] font-bold text-[#A7A7A7] uppercase tracking-widest">
-              {currentSong.album?.name || 'Now playing'}
-            </p>
-          </div>
-
-          <button className="w-10 h-10 flex items-center justify-center text-white/80 active:opacity-60">
-            <MoreVertical className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Album Art */}
-        <div className="flex-1 flex items-center justify-center px-6 py-4 min-h-0">
-          <div
-            className="w-full max-w-[300px] aspect-square rounded-sm overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.8)] transition-transform duration-500"
-            style={{ transform: isPlaying ? 'scale(1)' : 'scale(0.92)' }}
-          >
-            {img ? (
-              <img src={img} alt={currentSong.name} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full bg-[#282828]" />
-            )}
-          </div>
-        </div>
-
-        {/* Bottom Controls Area */}
-        <div
-          className="px-6 flex flex-col"
-          style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 24px), 24px)' }}
-        >
-          {/* Title + Like */}
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex-1 min-w-0 pr-4">
-              <h2 className="text-[22px] font-bold text-white truncate">{currentSong.name}</h2>
-              <p className="text-[14px] text-[#A7A7A7] truncate mt-0.5">{artistNames}</p>
-            </div>
-            <button
-              onClick={() => toggleLike(currentSong)}
-              className="w-10 h-10 flex items-center justify-end active:opacity-60"
-            >
-              <Heart className={cn('w-7 h-7', liked ? 'fill-[#FFD700] text-[#FFD700]' : 'text-white/70')} />
-            </button>
-          </div>
-
-          {/* Progress Bar */}
-          <div className="mb-4">
+        {/* Dynamic blurred background from album art */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {img && (
             <div
-              ref={progressBarRef}
-              onClick={seekTo}
-              onTouchStart={() => setIsDragging(true)}
-              onTouchMove={(e) => { if (isDragging) seekTo(e); }}
-              onTouchEnd={() => setIsDragging(false)}
-              className="w-full h-8 flex items-center cursor-pointer relative group"
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: `url(${img})`,
+                filter: 'blur(80px) saturate(2)',
+                transform: 'scale(1.3)',
+                opacity: 0.3,
+              }}
+            />
+          )}
+          {/* Dark gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-[#121212]/70 to-[#121212]" />
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col flex-1 overflow-hidden">
+
+          {/* Header */}
+          <div
+            className="flex items-center justify-between px-4"
+            style={{ paddingTop: 'max(env(safe-area-inset-top, 16px), 16px)', paddingBottom: '8px' }}
+          >
+            <button
+              onClick={() => setExpanded(false)}
+              className="w-10 h-10 flex items-center justify-center text-white/80 active:opacity-60"
             >
-              <div className="absolute inset-x-0 h-[4px] bg-[#4D4D4D] rounded-full" />
-              <div
-                className="absolute h-[4px] bg-white rounded-full"
-                style={{ width: `${progressPct}%` }}
-              />
-              <div
-                className="absolute w-[14px] h-[14px] bg-white rounded-full -translate-x-1/2 shadow-sm"
-                style={{ left: `${progressPct}%` }}
-              />
+              <ChevronDown className="w-8 h-8" />
+            </button>
+
+            <div className="text-center">
+              <p className="text-[11px] font-bold text-[#A7A7A7] uppercase tracking-widest">
+                {currentSong.album?.name || 'Now Playing'}
+              </p>
             </div>
-            <div className="flex items-center justify-between text-[11px] text-[#A7A7A7] -mt-1">
-              <span className="tabular-nums">{fmt(progress)}</span>
-              <span className="tabular-nums">{fmt(duration)}</span>
-            </div>
-          </div>
-
-          {/* Playback Controls */}
-          <div className="flex items-center justify-between mb-5">
-            <button
-              onClick={toggleShuffle}
-              className={cn('active:opacity-60 transition-opacity relative w-10 h-10 flex items-center justify-center', isShuffling ? 'text-[#FFD700]' : 'text-[#B3B3B3]')}
-            >
-              <Shuffle className="w-6 h-6" />
-              {isShuffling && <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#FFD700]" />}
-            </button>
-
-            <button onClick={previous} className="text-white active:opacity-60 w-12 h-12 flex items-center justify-center">
-              <SkipBack className="w-9 h-9 fill-current" />
-            </button>
 
             <button
-              onClick={togglePlay}
-              className="w-[66px] h-[66px] rounded-full bg-[#FFD700] flex items-center justify-center text-black active:scale-95 transition-transform"
+              onClick={() => setShowQueue(!showQueue)}
+              className={cn('w-10 h-10 flex items-center justify-center active:opacity-60 transition-colors', showQueue ? 'text-[#FFD700]' : 'text-white/80')}
             >
-              {isPlaying ? <Pause className="w-8 h-8 fill-current" /> : <Play className="w-8 h-8 fill-current ml-1" />}
-            </button>
-
-            <button onClick={next} className="text-white active:opacity-60 w-12 h-12 flex items-center justify-center">
-              <SkipForward className="w-9 h-9 fill-current" />
-            </button>
-
-            <button
-              onClick={toggleLoop}
-              className={cn('active:opacity-60 transition-opacity relative w-10 h-10 flex items-center justify-center', isLooping ? 'text-[#FFD700]' : 'text-[#B3B3B3]')}
-            >
-              <Repeat className="w-6 h-6" />
-              {isLooping && <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#FFD700]" />}
+              <ListMusic className="w-5 h-5" />
             </button>
           </div>
 
-          {/* Footer row */}
-          <div className="flex items-center justify-between px-1">
-            <button className="text-[#B3B3B3] active:opacity-60 w-10 h-10 flex items-center justify-center">
-              <Share2 className="w-5 h-5" />
-            </button>
-            {currentSong.hasLyrics && (
-              <span className="text-[11px] font-bold text-[#A7A7A7] border border-[#A7A7A7]/40 rounded-full px-3 py-1">
-                Lyrics
-              </span>
-            )}
-            <div className="w-10" />
+          {/* Album Art or Queue */}
+          {showQueue ? (
+            <div className="flex-1 overflow-y-auto px-4 py-2">
+              <h3 className="text-[16px] font-bold text-white mb-3">Queue ({queue.length} songs)</h3>
+              <div className="flex flex-col gap-1">
+                {queue.map((song, i) => {
+                  const isActive = song.id === currentSong.id;
+                  const songImg = song.image?.[1]?.url || song.image?.[0]?.url;
+                  return (
+                    <div
+                      key={`${song.id}-${i}`}
+                      className={cn(
+                        'flex items-center gap-3 p-2.5 rounded-xl transition-colors',
+                        isActive ? 'bg-white/10' : 'hover:bg-white/5'
+                      )}
+                    >
+                      <div className="w-10 h-10 rounded-md overflow-hidden shrink-0">
+                        {songImg && <img src={songImg} alt={song.name} className="w-full h-full object-cover" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className={cn('text-[13px] font-bold truncate', isActive ? 'text-[#FFD700]' : 'text-white')}>{song.name}</p>
+                        <p className="text-[11px] text-[#A7A7A7] truncate">{song.artists?.primary?.map(a => a.name).join(', ')}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            <div className="flex-1 flex items-center justify-center px-6 py-4 min-h-0">
+              <div
+                className="w-full max-w-[300px] aspect-square rounded-sm overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.8)] transition-transform duration-500"
+                style={{ transform: isPlaying ? 'scale(1)' : 'scale(0.92)' }}
+              >
+                {img ? (
+                  <img src={img} alt={currentSong.name} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-[#282828]" />
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Bottom Controls Area */}
+          <div
+            className="px-6 flex flex-col"
+            style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 24px), 24px)' }}
+          >
+            {/* Title + Like + Add to Playlist */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex-1 min-w-0 pr-2">
+                <h2 className="text-[22px] font-bold text-white truncate">{currentSong.name}</h2>
+                <p className="text-[14px] text-[#A7A7A7] truncate mt-0.5">{artistNames}</p>
+              </div>
+              <div className="flex items-center gap-1 shrink-0">
+                <button
+                  onClick={() => setShowPlaylistModal(true)}
+                  className="w-10 h-10 flex items-center justify-center text-white/70 active:opacity-60"
+                >
+                  <ListPlus className="w-6 h-6" />
+                </button>
+                <button
+                  onClick={handleLike}
+                  className="w-10 h-10 flex items-center justify-end active:opacity-60"
+                >
+                  <Heart className={cn('w-7 h-7', liked ? 'fill-[#FFD700] text-[#FFD700]' : 'text-white/70')} />
+                </button>
+              </div>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="mb-4">
+              <div
+                ref={progressBarRef}
+                onClick={seekTo}
+                onTouchStart={() => setIsDragging(true)}
+                onTouchMove={(e) => { if (isDragging) seekTo(e); }}
+                onTouchEnd={() => setIsDragging(false)}
+                className="w-full h-8 flex items-center cursor-pointer relative group"
+              >
+                <div className="absolute inset-x-0 h-[4px] bg-[#4D4D4D] rounded-full" />
+                <div
+                  className="absolute h-[4px] bg-white rounded-full"
+                  style={{ width: `${progressPct}%` }}
+                />
+                <div
+                  className="absolute w-[14px] h-[14px] bg-white rounded-full -translate-x-1/2 shadow-sm"
+                  style={{ left: `${progressPct}%` }}
+                />
+              </div>
+              <div className="flex items-center justify-between text-[11px] text-[#A7A7A7] -mt-1">
+                <span className="tabular-nums">{fmt(progress)}</span>
+                <span className="tabular-nums">{fmt(duration)}</span>
+              </div>
+            </div>
+
+            {/* Playback Controls */}
+            <div className="flex items-center justify-between mb-5">
+              <button
+                onClick={toggleShuffle}
+                className={cn('active:opacity-60 transition-opacity relative w-10 h-10 flex items-center justify-center', isShuffling ? 'text-[#FFD700]' : 'text-[#B3B3B3]')}
+              >
+                <Shuffle className="w-6 h-6" />
+                {isShuffling && <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#FFD700]" />}
+              </button>
+
+              <button onClick={previous} className="text-white active:opacity-60 w-12 h-12 flex items-center justify-center">
+                <SkipBack className="w-9 h-9 fill-current" />
+              </button>
+
+              <button
+                onClick={togglePlay}
+                className="w-[66px] h-[66px] rounded-full bg-[#FFD700] flex items-center justify-center text-black active:scale-95 transition-transform"
+              >
+                {isPlaying ? <Pause className="w-8 h-8 fill-current" /> : <Play className="w-8 h-8 fill-current ml-1" />}
+              </button>
+
+              <button onClick={next} className="text-white active:opacity-60 w-12 h-12 flex items-center justify-center">
+                <SkipForward className="w-9 h-9 fill-current" />
+              </button>
+
+              <button
+                onClick={toggleLoop}
+                className={cn('active:opacity-60 transition-opacity relative w-10 h-10 flex items-center justify-center', isLooping ? 'text-[#FFD700]' : 'text-[#B3B3B3]')}
+              >
+                <Repeat className="w-6 h-6" />
+                {isLooping && <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#FFD700]" />}
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <AddToPlaylistModal
+        isOpen={showPlaylistModal}
+        onClose={() => setShowPlaylistModal(false)}
+        song={currentSong}
+      />
+    </>
   );
 }

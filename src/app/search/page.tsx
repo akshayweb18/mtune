@@ -9,7 +9,16 @@ import { usePlayerStore } from '@/store/usePlayerStore';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { AddToPlaylistModal } from '@/components/shared/AddToPlaylistModal';
+import { SongContextMenu } from '@/components/shared/SongContextMenu';
 import { Song } from '@/types';
+
+const decodeHtml = (str: string) => str
+  .replace(/&quot;/g, '"')
+  .replace(/&#x27;/g, "'")
+  .replace(/&amp;/g, '&')
+  .replace(/&lt;/g, '<')
+  .replace(/&gt;/g, '>');
+
 
 const BROWSE_ALL = [
   { title: 'Hindi Hits', searchTerm: 'Top Hindi Songs', color: 'from-pink-600 to-rose-500', icon: <Music className="w-6 h-6 text-white" /> },
@@ -21,6 +30,14 @@ const BROWSE_ALL = [
 ];
 
 const TRENDING_SEARCHES = ['Kesariya', 'Shape of You', 'Husn', 'Blinding Lights', 'Arijit Singh', 'Taylor Swift', 'Apna Bana Le', 'Justin Bieber'];
+
+const getArtistImage = (artist: any) => {
+  const url = artist.image?.[2]?.url || artist.image?.[1]?.url || artist.image?.[0]?.url;
+  if (!url || url.includes('default') || url.includes('artist-default')) {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(artist.title || artist.name || 'A')}&background=FFD700&color=000&size=256&font-size=0.4`;
+  }
+  return url;
+};
 
 function SearchContent() {
   const searchParams = useSearchParams();
@@ -73,7 +90,7 @@ function SearchContent() {
   )) || (songsResults && songsResults.results?.length > 0);
 
   return (
-    <div className="flex flex-col" style={{ paddingTop: 'max(env(safe-area-inset-top, 16px), 16px)' }}>
+    <div className="flex flex-col pb-8" style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 0px)' }}>
       {/* Sticky Header with Search Bar */}
       <div className="sticky top-0 z-20 bg-[#121212] px-4 md:px-8 pt-4 pb-4">
         <h1 className="text-[22px] md:text-[26px] font-black text-white tracking-tight mb-4">Search</h1>
@@ -176,17 +193,12 @@ function SearchContent() {
                             </div>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h4 className="text-[14px] font-bold text-white truncate">{song.name}</h4>
+                            <h4 className="text-[14px] font-bold text-white truncate">{decodeHtml(song.name)}</h4>
                             <span className="text-[12px] text-[#A7A7A7] truncate">
-                              {song.artists?.primary?.map((a: any) => a.name).join(', ') || 'Song'}
+                              {decodeHtml(song.artists?.primary?.map((a: any) => a.name).join(', ') || 'Song')}
                             </span>
                           </div>
-                          <button
-                            className="p-2 text-[#A7A7A7] hover:text-white opacity-0 group-hover:opacity-100 touch-sm shrink-0"
-                            onClick={(e) => { e.stopPropagation(); setSelectedSongForPlaylist(song); }}
-                          >
-                            <ListPlus className="w-5 h-5" />
-                          </button>
+                          <SongContextMenu song={song} queue={songsResults.results} className="opacity-0 group-hover:opacity-100 touch-sm shrink-0" />
                         </div>
                       ))}
                     </div>
@@ -209,9 +221,9 @@ function SearchContent() {
                           href={`/artist/${artist.id}`}
                           className="flex flex-col items-center gap-2.5 shrink-0 w-[90px] md:w-[100px] group cursor-pointer snap-start active:scale-95 transition-transform"
                         >
-                          <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border border-white/10 group-hover:border-primary/50 shadow-lg">
+                          <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border border-white/10 group-hover:border-primary/50 shadow-lg shrink-0">
                             <img
-                              src={artist.image?.[2]?.url || artist.image?.[0]?.url || `https://ui-avatars.com/api/?name=${encodeURIComponent(artist.title || artist.name)}&background=7c3aed&color=fff`}
+                              src={getArtistImage(artist)}
                               alt={artist.title || artist.name}
                               className="w-full h-full object-cover"
                               loading="lazy"

@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { Song } from '@/types';
 import { AddToPlaylistModal } from '@/components/shared/AddToPlaylistModal';
 import { CreatePlaylistModal } from '@/components/shared/CreatePlaylistModal';
+import { SongContextMenu } from '@/components/shared/SongContextMenu';
 import Link from 'next/link';
 
 const tabs = ['Liked Songs', 'History', 'Playlists', 'Artists'];
@@ -48,7 +49,10 @@ export default function LibraryPage() {
             <ListMusic className="w-8 h-8 text-white/40" />
           </div>
           <h2 className="text-xl font-bold text-white mb-2">No songs yet</h2>
-          <p className="text-white/40 text-sm">Start listening to build your collection.</p>
+          <p className="text-white/40 text-sm mb-6">Start listening to build your collection.</p>
+          <Link href="/search" className="px-6 py-2.5 bg-white text-black font-bold rounded-full text-[14px] hover:scale-105 transition-transform shadow-lg">
+            Find songs
+          </Link>
         </div>
       );
     }
@@ -90,15 +94,7 @@ export default function LibraryPage() {
                 </div>
               </div>
               <div className="flex items-center">
-                <button 
-                  className="text-white/40 hover:text-white p-2 transition shrink-0 touch-sm active:scale-90" 
-                  onClick={(e) => { e.stopPropagation(); setSelectedSongForPlaylist(song); }}
-                >
-                  <ListPlus className="w-5 h-5" />
-                </button>
-                <button className="text-white/40 hover:text-white p-2 transition shrink-0 touch-sm" onClick={(e) => e.stopPropagation()}>
-                  <MoreVertical className="w-5 h-5" />
-                </button>
+                <SongContextMenu song={song} queue={songs} />
               </div>
             </div>
           );

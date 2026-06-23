@@ -9,8 +9,16 @@ import { Song, CustomPlaylist } from '@/types';
 import { cn } from '@/lib/utils';
 import { useLibraryStore } from '@/store/useLibraryStore';
 import { AddToPlaylistModal } from '@/components/shared/AddToPlaylistModal';
+import { SongContextMenu } from '@/components/shared/SongContextMenu';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+
+const decodeHtml = (str: string) => str
+  .replace(/&quot;/g, '"')
+  .replace(/&#x27;/g, "'")
+  .replace(/&amp;/g, '&')
+  .replace(/&lt;/g, '<')
+  .replace(/&gt;/g, '>');
 
 export default function PlaylistPage() {
   const { id } = useParams();
@@ -93,7 +101,7 @@ export default function PlaylistPage() {
               {isCustom ? 'Custom Playlist' : 'Playlist'}
             </span>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white drop-shadow-lg tracking-tight mb-4 line-clamp-2">
-              {playlist.name}
+              {decodeHtml(playlist.name)}
             </h1>
             <p className="text-white/60 text-sm md:text-base font-medium flex items-center gap-2 flex-wrap">
                <span className="text-white font-bold">{isCustom ? 'You' : 'Akshay Music'}</span>
@@ -163,42 +171,33 @@ export default function PlaylistPage() {
 
                   <div className="flex-1 min-w-0 flex flex-col justify-center pr-4">
                     <h4 className={cn("text-[14px] md:text-base font-bold truncate transition-colors", isActive ? "text-secondary drop-shadow-[0_0_8px_rgba(236,72,153,0.5)]" : "text-white group-hover:text-primary")}>
-                      {song.name}
+                      {decodeHtml(song.name)}
                     </h4>
                     <p className="text-[12px] md:text-[13px] text-white/50 truncate font-medium">
-                      {song.artists?.primary?.map((a: any) => a.name).join(', ') || 'Unknown Artist'}
+                      {decodeHtml(song.artists?.primary?.map((a: any) => a.name).join(', ') || 'Unknown Artist')}
                     </p>
                   </div>
 
                   <div className="flex items-center shrink-0">
                     <button 
                       onClick={(e) => { e.stopPropagation(); toggleLike(song); }}
-                      className="p-2 text-white/40 hover:text-white hover:scale-110 transition-all"
+                      className="p-2 text-white/40 hover:text-white hover:scale-110 transition-all hidden md:block"
                     >
                       <Heart className={cn("w-5 h-5 transition-colors", isLikedSong ? "fill-secondary text-secondary drop-shadow-[0_0_10px_rgba(236,72,153,0.6)]" : "")} />
                     </button>
 
-                    <button 
-                      onClick={(e) => { e.stopPropagation(); setSelectedSongForPlaylist(song); }}
-                      className="p-2 text-white/40 hover:text-white transition touch-sm hidden md:block"
-                    >
-                      <ListPlus className="w-5 h-5" />
-                    </button>
+                    <SongContextMenu song={song} queue={songs} className="md:opacity-0 md:group-hover:opacity-100" />
 
-                    {isCustom ? (
+                    {isCustom && (
                       <button 
                         onClick={(e) => { 
                           e.stopPropagation(); 
                           removeSongFromPlaylist(id as string, song.id); 
                         }}
-                        className="p-2 text-white/40 hover:text-red-400 transition touch-sm"
+                        className="p-2 text-white/40 hover:text-red-400 transition touch-sm ml-1"
                         title="Remove from playlist"
                       >
                         <Trash2 className="w-5 h-5" />
-                      </button>
-                    ) : (
-                      <button className="p-2 text-white/40 hover:text-white transition touch-sm md:opacity-0 md:group-hover:opacity-100">
-                        <MoreVertical className="w-5 h-5" />
                       </button>
                     )}
                   </div>
