@@ -291,7 +291,7 @@ export default function Home() {
       const evenings = ['Evening chills', 'Night vibes', 'Time to unwind', 'Good evening'];
       greeting = evenings[Math.floor(Math.random() * evenings.length)];
     }
-    
+
     if (user && user.displayName) {
       const firstName = user.displayName.split(' ')[0];
       return (
@@ -550,7 +550,7 @@ export default function Home() {
     for (const s of results || []) {
       const img = getImg(s);
       if (usedIds.has(s.id) || (img && usedImgs.has(img))) continue;
-      
+
       // Exclude specific unwanted songs
       const titleLower = (s.name || (s as any).title || '').toLowerCase();
       if (titleLower.includes('mere hussain') || titleLower.includes('naat')) continue;
@@ -562,28 +562,28 @@ export default function Home() {
     return out;
   };
 
-  const latestTrending  = dedup(latestTrendingData?.results  || []);
-  const newReleases     = dedup(newReleasesData?.results     || []);
-  const songs           = dedup(songsData?.results           || []);
-  const moreSongs       = dedup(moreSongsData?.results       || []);
-  const romanticSongs   = dedup(romanticData?.results        || []);
-  const movieSongs      = dedup(movieData?.results           || []);
-  const partySongs      = dedup(partyData?.results           || []);
-  const workoutSongs    = dedup(workoutData?.results         || []);
-  const sadSongs        = dedup(sadData?.results             || []);
-  const indieSongs      = dedup(indieData?.results           || []);
-  const classicSongs      = dedup(classicData?.results         || []);
-  const devotionalSongs   = dedup(devotionalData?.results      || []);
-  const bhaktiHinduSongs  = dedup(bhaktiHinduData?.results     || []);
-  const chartbusters      = dedup(chartbustersData?.results    || []);
-  const bollywood2025     = dedup(bollywood2025Data?.results   || []);
-  const bollywoodDance    = dedup(bollywoodDance2025Data?.results || []);
-  const bollywoodRomance  = dedup(bollywoodRomance2025Data?.results || []);
-  const bollywoodTop50    = dedup(bollywoodTop50Data?.results  || []);
-  const topHits2025       = dedup(topHits2025Data?.results     || []);
+  const latestTrending = dedup(latestTrendingData?.results || []);
+  const newReleases = dedup(newReleasesData?.results || []);
+  const songs = dedup(songsData?.results || []);
+  const moreSongs = dedup(moreSongsData?.results || []);
+  const romanticSongs = dedup(romanticData?.results || []);
+  const movieSongs = dedup(movieData?.results || []);
+  const partySongs = dedup(partyData?.results || []);
+  const workoutSongs = dedup(workoutData?.results || []);
+  const sadSongs = dedup(sadData?.results || []);
+  const indieSongs = dedup(indieData?.results || []);
+  const classicSongs = dedup(classicData?.results || []);
+  const devotionalSongs = dedup(devotionalData?.results || []);
+  const bhaktiHinduSongs = dedup(bhaktiHinduData?.results || []);
+  const chartbusters = dedup(chartbustersData?.results || []);
+  const bollywood2025 = dedup(bollywood2025Data?.results || []);
+  const bollywoodDance = dedup(bollywoodDance2025Data?.results || []);
+  const bollywoodRomance = dedup(bollywoodRomance2025Data?.results || []);
+  const bollywoodTop50 = dedup(bollywoodTop50Data?.results || []);
+  const topHits2025 = dedup(topHits2025Data?.results || []);
 
-  const albums    = albumsData?.results    || [];
-  const artists   = artistsData?.results   || [];
+  const albums = albumsData?.results || [];
+  const artists = artistsData?.results || [];
   const playlists = playlistsData?.results || [];
 
   const playSong = (song: Song, queue: Song[]) => {
