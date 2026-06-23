@@ -22,7 +22,7 @@ export default function MusicVisual() {
         transition={{ duration: 0.7, ease: 'easeOut' }}
       >
         <div className="music-visual-logo">
-          <Music size={22} strokeWidth={2.5} />
+          <img src="/favicon.jpg" alt="mTune Logo" className="w-6 h-6 rounded-md" />
         </div>
         <span className="music-visual-brand-name">mTune</span>
       </motion.div>
