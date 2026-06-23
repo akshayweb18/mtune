@@ -20,7 +20,7 @@ export function SongContextMenu({ song, queue = [], className, iconClassName }: 
   const [isOpen, setIsOpen] = useState(false);
   const [showPlaylistModal, setShowPlaylistModal] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const { isLiked, toggleLike, addToQueue: storeAddToQueue } = useLibraryStore();
+  const { isLiked, toggleLike } = useLibraryStore();
   const { addToQueue, setCurrentSong, setQueue } = usePlayerStore();
   const liked = isLiked(song.id);
 
