@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import { useEffect } from 'react';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { RightPlayer } from '@/components/layout/RightPlayer';
 import { MobileBottomNav } from '@/components/layout/MobileBottomNav';
@@ -11,21 +12,28 @@ import { ToastContainer } from '@/components/shared/Toast';
 import { useEdgeSwipeBack } from '@/hooks/useEdgeSwipeBack';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { PWAInstallPrompt } from '@/components/shared/PWAInstallPrompt';
-
-
-
+import { AuthPopup } from '@/components/shared/AuthPopup';
+import { useAuth } from '@/hooks/useAuth';
+import { usePlayerStore } from '@/store/usePlayerStore';
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAuthPage = pathname?.startsWith('/auth');
+  const { user } = useAuth();
+  const showAuthPopup = usePlayerStore((s) => s.showAuthPopup);
+  const dismissAuthPopup = usePlayerStore((s) => s.dismissAuthPopup);
+  const setAuthenticated = usePlayerStore((s) => s.setAuthenticated);
+
+  // Sync Firebase auth state with player store
+  useEffect(() => {
+    setAuthenticated(!!user);
+  }, [user, setAuthenticated]);
 
   // Global mobile back-swipe gesture (left/right edge → history.back)
   useEdgeSwipeBack();
 
   // Global keyboard shortcuts (Space, Alt+Arrow, M, L, Shift+S)
   useKeyboardShortcuts();
-
-
 
   // Auth page: render children only — no sidebar, no players, no nav
   if (isAuthPage) {
@@ -84,6 +92,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* PWA Install Prompt */}
       <PWAInstallPrompt />
+
+      {/* Auth Popup — shown after 3 songs for guests */}
+      <AuthPopup isOpen={showAuthPopup && !user} onClose={dismissAuthPopup} />
     </>
   );
 }

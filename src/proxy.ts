@@ -1,10 +1,7 @@
-// proxy.ts
+// proxy.ts — Auth is handled client-side via popup, not server redirect
 
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-
-// Routes that don't require authentication
-const PUBLIC_ROUTES = ["/auth"];
 
 // Static/system paths to always allow
 const BYPASS_PREFIXES = [
@@ -24,23 +21,15 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const isPublicRoute = PUBLIC_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(route + "/")
-  );
-
   const authCookie = request.cookies.get("mtune-auth");
   const isAuthenticated = Boolean(authCookie?.value);
 
-  // Logged in user visiting /auth
-  if (isAuthenticated && isPublicRoute) {
+  // Logged-in user visiting /auth → redirect to home
+  if (isAuthenticated && pathname.startsWith("/auth")) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // Unauthenticated user visiting protected route
-  if (!isAuthenticated && !isPublicRoute) {
-    return NextResponse.redirect(new URL("/auth", request.url));
-  }
-
+  // All other routes are public — no redirect for unauthenticated users
   return NextResponse.next();
 }
 
@@ -49,4 +38,3 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico).*)",
   ],
 };
-

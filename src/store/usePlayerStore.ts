@@ -12,7 +12,13 @@ interface PlayerState {
   isLooping: boolean;
   isShuffling: boolean;
   isExpanded: boolean;
-  
+
+  // Auth popup state
+  songsPlayedCount: number;
+  showAuthPopup: boolean;
+  popupDismissed: boolean;
+  isAuthenticated: boolean;
+
   // Actions
   setCurrentSong: (song: Song) => void;
   setQueue: (queue: Song[]) => void;
@@ -30,6 +36,8 @@ interface PlayerState {
   toggleLoop: () => void;
   toggleShuffle: () => void;
   setExpanded: (expanded: boolean) => void;
+  dismissAuthPopup: () => void;
+  setAuthenticated: (value: boolean) => void;
 }
 
 export const usePlayerStore = create<PlayerState>((set, get) => ({
@@ -44,23 +52,58 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   isShuffling: false,
   isExpanded: false,
 
-  setCurrentSong: (song) => set({ currentSong: song, isPlaying: true }),
+  songsPlayedCount: 0,
+  showAuthPopup: false,
+  popupDismissed: false,
+  isAuthenticated: false,
+
+  setCurrentSong: (song) => set((state) => {
+    // If already authenticated, always allow
+    if (state.isAuthenticated) {
+      return { currentSong: song, isPlaying: true };
+    }
+
+    const newCount = state.songsPlayedCount + 1;
+
+    // Block the 4th+ song and show popup
+    if (newCount > 3) {
+      return {
+        showAuthPopup: true,
+        isPlaying: false,
+      };
+    }
+
+    return {
+      currentSong: song,
+      isPlaying: true,
+      songsPlayedCount: newCount,
+    };
+  }),
+
   setExpanded: (expanded: boolean) => set({ isExpanded: expanded }),
-  
+
+  dismissAuthPopup: () => set({ showAuthPopup: false }),
+
+  setAuthenticated: (value: boolean) => set({
+    isAuthenticated: value,
+    showAuthPopup: false,
+    popupDismissed: true,
+  }),
+
   setQueue: (queue) => set({ queue }),
-  
+
   addToQueue: (song) => set((state) => ({ queue: [...state.queue, song] })),
-  
-  removeFromQueue: (songId) => set((state) => ({ 
-    queue: state.queue.filter(s => s.id !== songId) 
+
+  removeFromQueue: (songId) => set((state) => ({
+    queue: state.queue.filter(s => s.id !== songId)
   })),
-  
+
   play: () => set({ isPlaying: true }),
-  
+
   pause: () => set({ isPlaying: false }),
-  
+
   togglePlay: () => set((state) => ({ isPlaying: !state.isPlaying })),
-  
+
   next: () => set((state) => {
     if (state.queue.length === 0 || !state.currentSong) return state;
     const currentIndex = state.queue.findIndex(s => s.id === state.currentSong?.id);
@@ -70,9 +113,19 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       }
       return { isPlaying: false, progress: 0 };
     }
-    return { currentSong: state.queue[currentIndex + 1], isPlaying: true };
+
+    // Check auth limit for next song
+    if (!state.isAuthenticated && state.songsPlayedCount >= 3) {
+      return { showAuthPopup: true, isPlaying: false };
+    }
+
+    return {
+      currentSong: state.queue[currentIndex + 1],
+      isPlaying: true,
+      songsPlayedCount: state.songsPlayedCount + 1,
+    };
   }),
-  
+
   previous: () => set((state) => {
     if (state.queue.length === 0 || !state.currentSong) return state;
     const currentIndex = state.queue.findIndex(s => s.id === state.currentSong?.id);
@@ -84,16 +137,16 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     }
     return { currentSong: state.queue[currentIndex - 1], isPlaying: true };
   }),
-  
+
   setVolume: (volume) => set({ volume }),
-  
+
   setProgress: (progress) => set({ progress }),
-  
+
   setDuration: (duration) => set({ duration }),
-  
+
   toggleMute: () => set((state) => ({ isMuted: !state.isMuted })),
-  
+
   toggleLoop: () => set((state) => ({ isLooping: !state.isLooping })),
-  
+
   toggleShuffle: () => set((state) => ({ isShuffling: !state.isShuffling })),
 }));
