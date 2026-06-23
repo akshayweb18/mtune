@@ -3,7 +3,7 @@
 import { usePlayerStore } from '@/store/usePlayerStore';
 import { useLibraryStore } from '@/store/useLibraryStore';
 import { Play, Pause, SkipBack, SkipForward, Repeat, Shuffle, Heart, Music, ListMusic } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, decodeHtml } from '@/lib/utils';
 
 export function RightPlayer() {
   const { currentSong, isPlaying, togglePlay, progress, duration, toggleLoop, isLooping, toggleShuffle, isShuffling, next, previous, setProgress } = usePlayerStore();
@@ -14,7 +14,7 @@ export function RightPlayer() {
   // Safe defaults for when currentSong is null (during closing animation)
   const liked = currentSong ? isLiked(currentSong.id) : false;
   const img = currentSong?.image?.[2]?.url || currentSong?.image?.[0]?.url;
-  const artistNames = currentSong?.artists?.primary?.map(a => a.name).join(', ') || 'Unknown Artist';
+  const artistNames = decodeHtml(currentSong?.artists?.primary?.map(a => a.name).join(', ') || 'Unknown Artist');
   const progressPct = duration > 0 ? (progress / duration) * 100 : 0;
 
   const fmt = (t: number) => {
@@ -60,7 +60,7 @@ export function RightPlayer() {
             {/* Song Info + Like */}
             <div className="px-4 mt-5 flex items-start justify-between gap-2">
               <div className="flex-1 min-w-0">
-                <h2 className="text-[16px] font-bold text-white truncate hover:underline cursor-pointer">{currentSong.name}</h2>
+                <h2 className="text-[16px] font-bold text-white truncate hover:underline cursor-pointer">{decodeHtml(currentSong.name)}</h2>
                 <p className="text-[13px] text-[#A7A7A7] truncate hover:underline cursor-pointer mt-0.5">{artistNames}</p>
               </div>
               <button

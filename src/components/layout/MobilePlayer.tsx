@@ -5,7 +5,7 @@ import {
   Play, Pause, SkipBack, SkipForward, Heart,
   Shuffle, Repeat, ChevronDown, ListPlus, ListMusic, X
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, decodeHtml } from '@/lib/utils';
 import { useRef, useState } from 'react';
 import { useLibraryStore } from '@/store/useLibraryStore';
 import { AddToPlaylistModal } from '@/components/shared/AddToPlaylistModal';
@@ -41,7 +41,7 @@ export function MobilePlayer() {
   const liked       = isLiked(currentSong.id);
   const progressPct = duration > 0 ? (progress / duration) * 100 : 0;
   const img         = currentSong.image?.[2]?.url || currentSong.image?.[0]?.url;
-  const artistNames = currentSong.artists?.primary?.map(a => a.name).join(', ') || 'Unknown Artist';
+  const artistNames = decodeHtml(currentSong.artists?.primary?.map(a => a.name).join(', ') || 'Unknown Artist');
 
   const fmt = (t: number) => {
     if (isNaN(t) || !isFinite(t)) return '0:00';
@@ -86,7 +86,7 @@ export function MobilePlayer() {
 
           {/* Track info */}
           <div className="flex flex-col justify-center flex-1 min-w-0">
-            <p className="text-[13px] font-bold text-white truncate">{currentSong.name}</p>
+            <p className="text-[13px] font-bold text-white truncate">{decodeHtml(currentSong.name)}</p>
             <p className="text-[11px] text-[#A7A7A7] truncate">{artistNames}</p>
           </div>
 
@@ -165,7 +165,7 @@ export function MobilePlayer() {
 
             <div className="flex-[2] text-center px-2 min-w-0">
               <p className="text-[11px] font-bold text-[#A7A7A7] uppercase tracking-widest truncate">
-                {currentSong.album?.name || 'Now Playing'}
+                {decodeHtml(currentSong.album?.name) || 'Now Playing'}
               </p>
             </div>
 
@@ -200,8 +200,8 @@ export function MobilePlayer() {
                         {songImg && <img src={songImg} alt={song.name} className="w-full h-full object-cover" />}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className={cn('text-[13px] font-bold truncate', isActive ? 'text-[#FFD700]' : 'text-white')}>{song.name}</p>
-                        <p className="text-[11px] text-[#A7A7A7] truncate">{song.artists?.primary?.map(a => a.name).join(', ')}</p>
+                        <p className={cn('text-[13px] font-bold truncate', isActive ? 'text-[#FFD700]' : 'text-white')}>{decodeHtml(song.name)}</p>
+                        <p className="text-[11px] text-[#A7A7A7] truncate">{decodeHtml(song.artists?.primary?.map(a => a.name).join(', '))}</p>
                       </div>
                     </div>
                   );
@@ -231,7 +231,7 @@ export function MobilePlayer() {
             {/* Title + Like + Add to Playlist */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex-1 min-w-0 pr-2">
-                <h2 className="text-[22px] font-bold text-white truncate">{currentSong.name}</h2>
+                <h2 className="text-[22px] font-bold text-white truncate">{decodeHtml(currentSong.name)}</h2>
                 <p className="text-[14px] text-[#A7A7A7] truncate mt-0.5">{artistNames}</p>
               </div>
               <div className="flex items-center gap-1 shrink-0">

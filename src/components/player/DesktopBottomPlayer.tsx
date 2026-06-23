@@ -7,7 +7,7 @@ import {
   Repeat, Shuffle, Heart, ListMusic, Mic2, Maximize2
 } from 'lucide-react';
 import { useRef } from 'react';
-import { cn } from '@/lib/utils';
+import { cn, decodeHtml } from '@/lib/utils';
 import { showToast } from '@/components/shared/Toast';
 import { SleepTimer } from './SleepTimer';
 
@@ -86,10 +86,10 @@ export function DesktopBottomPlayer() {
 
         <div className="flex flex-col min-w-0 flex-1">
           <h4 className="text-[13px] font-bold text-white truncate hover:underline cursor-pointer">
-            {currentSong.name}
+            {decodeHtml(currentSong.name)}
           </h4>
           <p className="text-[11px] text-[#A7A7A7] truncate hover:underline cursor-pointer mt-0.5">
-            {currentSong.artists?.primary?.map(a => a.name).join(', ')}
+            {decodeHtml(currentSong.artists?.primary?.map(a => a.name).join(', '))}
           </p>
         </div>
 
