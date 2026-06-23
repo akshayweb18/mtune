@@ -9,10 +9,16 @@ import { AudioEngine } from '@/components/player/AudioEngine';
 import { DesktopBottomPlayer } from '@/components/player/DesktopBottomPlayer';
 import AvatarDropdown from '@/components/profile/AvatarDropdown';
 import { ToastContainer } from '@/components/shared/Toast';
+import { useEdgeSwipeBack } from '@/hooks/useEdgeSwipeBack';
+
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAuthPage = pathname?.startsWith('/auth');
+
+  // Global mobile back-swipe gesture (left/right edge → history.back)
+  useEdgeSwipeBack();
+
 
   // Auth page: render children only — no sidebar, no players, no nav
   if (isAuthPage) {
