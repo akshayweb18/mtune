@@ -52,7 +52,7 @@ export default function AlbumPage() {
       {/* Immersive Hero Header */}
       <div className="relative w-full h-[45vh] min-h-[350px] flex items-end p-6 md:p-10 z-10 overflow-hidden">
         {/* Background Image (Optimized: removed blur-2xl) */}
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 scale-110"
           style={{ backgroundImage: `url(${img})` }}
         />
@@ -61,13 +61,13 @@ export default function AlbumPage() {
 
         <div className="relative z-10 flex flex-col md:flex-row items-center md:items-end gap-6 md:gap-8 w-full mt-10 md:mt-0">
           <div className="w-40 h-40 md:w-56 md:h-56 rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] shrink-0 border border-white/10 group">
-             {img ? (
-               <img src={img} alt={album.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-             ) : (
-               <div className="w-full h-full bg-white/10 flex items-center justify-center">
-                 <Disc className="w-12 h-12 text-white/40" />
-               </div>
-             )}
+            {img ? (
+              <img src={img} alt={album.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            ) : (
+              <div className="w-full h-full bg-white/10 flex items-center justify-center">
+                <Disc className="w-12 h-12 text-white/40" />
+              </div>
+            )}
           </div>
           <div className="flex flex-col flex-1 pb-2 items-center md:items-start text-center md:text-left">
             <span className="text-white/80 font-bold uppercase tracking-widest text-xs md:text-sm mb-2 drop-shadow-md">Album</span>
@@ -77,12 +77,12 @@ export default function AlbumPage() {
             <div className="flex items-center justify-center md:justify-start gap-3">
               {album.primaryArtists?.[0] && (
                 <div className="w-8 h-8 rounded-full bg-white/10 overflow-hidden shrink-0">
-                   <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(album.primaryArtists[0].name)}&background=random`} className="w-full h-full object-cover" />
+                  <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(album.primaryArtists[0].name)}&background=random`} className="w-full h-full object-cover" />
                 </div>
               )}
               <p className="text-white/60 text-sm md:text-base font-medium flex items-center justify-center md:justify-start gap-2 flex-wrap">
-                 <span className="text-white font-bold">{album.primaryArtists?.map(a => a.name).join(', ') || 'Various Artists'}</span>
-                 • {(album.year || new Date().getFullYear())} • {songs.length} songs
+                <span className="text-white font-bold">{album.primaryArtists?.map(a => a.name).join(', ') || 'Various Artists'}</span>
+                • {(album.year || new Date().getFullYear())} • {songs.length} songs
               </p>
             </div>
           </div>
@@ -90,12 +90,12 @@ export default function AlbumPage() {
 
         {/* Floating Neon Play Button */}
         <div className="absolute -bottom-8 right-8 md:right-12 z-20">
-           <button 
-             onClick={handlePlayAll}
-             className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-secondary to-primary flex items-center justify-center text-white shadow-[0_0_30px_rgba(236,72,153,0.6)] hover:scale-105 active:scale-95 transition-all"
-           >
-             <Play className="w-8 h-8 fill-current ml-1.5" />
-           </button>
+          <button
+            onClick={handlePlayAll}
+            className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-secondary to-primary flex items-center justify-center text-white shadow-[0_0_30px_rgba(236,72,153,0.6)] hover:scale-105 active:scale-95 transition-all"
+          >
+            <Play className="w-8 h-8 fill-current ml-1.5" />
+          </button>
         </div>
       </div>
 
@@ -112,9 +112,9 @@ export default function AlbumPage() {
             {songs.map((song, index) => {
               const isActive = currentSong?.id === song.id;
               const isLikedSong = isLiked(song.id);
-              
+
               return (
-                <div 
+                <div
                   key={song.id}
                   onClick={() => handlePlaySong(song, index)}
                   className="flex items-center p-2 md:p-3 rounded-xl hover:bg-white/5 active:scale-95 transition-all group cursor-pointer"
@@ -142,14 +142,14 @@ export default function AlbumPage() {
                   </div>
 
                   <div className="flex items-center shrink-0">
-                    <button 
+                    <button
                       onClick={(e) => { e.stopPropagation(); toggleLike(song); }}
                       className="p-2 text-white/40 hover:text-white hover:scale-110 transition-all"
                     >
                       <Heart className={cn("w-5 h-5 transition-colors", isLikedSong ? "fill-secondary text-secondary drop-shadow-[0_0_10px_rgba(236,72,153,0.6)]" : "")} />
                     </button>
 
-                    <button 
+                    <button
                       onClick={(e) => { e.stopPropagation(); setSelectedSongForPlaylist(song); }}
                       className="p-2 text-white/40 hover:text-white transition touch-sm hidden md:block"
                     >
@@ -170,11 +170,11 @@ export default function AlbumPage() {
           </div>
         </div>
       </div>
-      
-      <AddToPlaylistModal 
-        isOpen={!!selectedSongForPlaylist} 
-        onClose={() => setSelectedSongForPlaylist(null)} 
-        song={selectedSongForPlaylist} 
+
+      <AddToPlaylistModal
+        isOpen={!!selectedSongForPlaylist}
+        onClose={() => setSelectedSongForPlaylist(null)}
+        song={selectedSongForPlaylist}
       />
     </div>
   );
