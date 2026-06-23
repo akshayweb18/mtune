@@ -42,10 +42,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setAuthCookie(firebaseUser.uid);
         setUser(firebaseUser);
         
-        // Fetch user's library from Firestore
+        // 1. Instantly load from localStorage for snappy UI
+        const localData = localStorage.getItem(`mtune_lib_${firebaseUser.uid}`);
+        if (localData) {
+          try {
+            useLibraryStore.getState().setLibraryData(JSON.parse(localData));
+          } catch (e) {
+            console.error('Failed to parse local library data', e);
+          }
+        }
+        initialLoadDone.current = true;
+
+        // 2. Fetch user's library from Firestore in background
         const libraryData = await getUserLibrary(firebaseUser.uid);
         useLibraryStore.getState().setLibraryData(libraryData);
-        initialLoadDone.current = true;
+        // Save merged/latest data back to local storage
+        localStorage.setItem(`mtune_lib_${firebaseUser.uid}`, JSON.stringify(libraryData));
       } else {
         clearAuthCookie();
         setUser(null);
@@ -60,15 +72,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => unsubscribe();
   }, []);
 
-  // Sync store changes to Firestore
+  // Sync store changes to Firestore AND localStorage
   useEffect(() => {
     const unsubscribeStore = useLibraryStore.subscribe((state) => {
       if (user && initialLoadDone.current) {
-        saveUserLibrary(user.uid, {
+        const dataToSave = {
           likedSongs: state.likedSongs,
           recentSongs: state.recentSongs,
           customPlaylists: state.customPlaylists,
-        });
+        };
+
+        // Save to local storage immediately per-user
+        localStorage.setItem(`mtune_lib_${user.uid}`, JSON.stringify(dataToSave));
+
+        // Save to Firestore asynchronously
+        saveUserLibrary(user.uid, dataToSave);
       }
     });
 
