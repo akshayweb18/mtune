@@ -86,8 +86,8 @@ export default function PlaylistPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#05050A] via-[#05050A]/80 to-transparent z-0"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent z-0"></div>
 
-        <div className="relative z-10 flex flex-col md:flex-row items-end gap-6 md:gap-8 w-full">
-          <div className="w-36 h-36 md:w-56 md:h-56 rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] shrink-0 border border-white/10 group">
+        <div className="relative z-10 flex flex-col md:flex-row items-center md:items-end gap-6 md:gap-8 w-full mt-10 md:mt-0">
+          <div className="w-40 h-40 md:w-56 md:h-56 rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] shrink-0 border border-white/10 group">
              {img ? (
                <img src={img} alt={playlist.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
              ) : (
@@ -96,19 +96,19 @@ export default function PlaylistPage() {
                </div>
              )}
           </div>
-          <div className="flex flex-col flex-1 pb-2">
+          <div className="flex flex-col flex-1 pb-2 items-center md:items-start text-center md:text-left">
             <span className="text-white/80 font-bold uppercase tracking-widest text-xs md:text-sm mb-2 drop-shadow-md">
               {isCustom ? 'Custom Playlist' : 'Playlist'}
             </span>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white drop-shadow-lg tracking-tight mb-4 line-clamp-2">
               {decodeHtml(playlist.name)}
             </h1>
-            <p className="text-white/60 text-sm md:text-base font-medium flex items-center gap-2 flex-wrap">
+            <p className="text-white/60 text-sm md:text-base font-medium flex items-center justify-center md:justify-start gap-2 flex-wrap">
                <span className="text-white font-bold">{isCustom ? 'You' : 'Akshay Music'}</span>
                • {(playlist as any).songCount || songs.length} songs
             </p>
             {isCustom && (
-              <div className="mt-4 flex">
+              <div className="mt-4 flex justify-center md:justify-start">
                 <button 
                   onClick={handleDeletePlaylist}
                   className="px-4 py-2 bg-white/10 hover:bg-red-500/80 text-white rounded-full text-sm font-bold backdrop-blur-md border border-white/20 transition flex items-center gap-2"

@@ -59,8 +59,8 @@ export default function AlbumPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#05050f] via-[#05050f]/80 to-transparent z-0"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-transparent z-0"></div>
 
-        <div className="relative z-10 flex flex-col md:flex-row items-end gap-6 md:gap-8 w-full">
-          <div className="w-36 h-36 md:w-56 md:h-56 rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] shrink-0 border border-white/10 group">
+        <div className="relative z-10 flex flex-col md:flex-row items-center md:items-end gap-6 md:gap-8 w-full mt-10 md:mt-0">
+          <div className="w-40 h-40 md:w-56 md:h-56 rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] shrink-0 border border-white/10 group">
              {img ? (
                <img src={img} alt={album.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
              ) : (
@@ -69,18 +69,18 @@ export default function AlbumPage() {
                </div>
              )}
           </div>
-          <div className="flex flex-col flex-1 pb-2">
+          <div className="flex flex-col flex-1 pb-2 items-center md:items-start text-center md:text-left">
             <span className="text-white/80 font-bold uppercase tracking-widest text-xs md:text-sm mb-2 drop-shadow-md">Album</span>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white drop-shadow-lg tracking-tight mb-4 line-clamp-2">
               {album.name}
             </h1>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center md:justify-start gap-3">
               {album.primaryArtists?.[0] && (
-                <div className="w-8 h-8 rounded-full bg-white/10 overflow-hidden">
+                <div className="w-8 h-8 rounded-full bg-white/10 overflow-hidden shrink-0">
                    <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(album.primaryArtists[0].name)}&background=random`} className="w-full h-full object-cover" />
                 </div>
               )}
-              <p className="text-white/60 text-sm md:text-base font-medium flex items-center gap-2 flex-wrap">
+              <p className="text-white/60 text-sm md:text-base font-medium flex items-center justify-center md:justify-start gap-2 flex-wrap">
                  <span className="text-white font-bold">{album.primaryArtists?.map(a => a.name).join(', ') || 'Various Artists'}</span>
                  • {(album.year || new Date().getFullYear())} • {songs.length} songs
               </p>
