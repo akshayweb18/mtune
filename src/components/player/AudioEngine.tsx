@@ -52,14 +52,27 @@ export function AudioEngine() {
 
     const handleLoadedMetadata = () => setDuration(audio.duration);
 
-    const handleEnded = () => {
-      const { isLooping, next } = usePlayerStore.getState();
+    const handleEnded = async () => {
+      const { isLooping, next, queue, currentSong, setQueue } = usePlayerStore.getState();
       if (isLooping) {
         audio.currentTime = 0;
         audio.play().catch(() => {});
-      } else {
-        next();
+        return;
       }
+
+      // Check if this is the last song in queue
+      const idx = queue.findIndex(s => s.id === currentSong?.id);
+      if (idx === queue.length - 1 && currentSong) {
+        // Auto-fetch similar songs
+        try {
+          const { saavnApi } = await import('@/services/api');
+          const suggestions = await saavnApi.getSongSuggestions(currentSong.id, 10);
+          if (suggestions && suggestions.length > 0) {
+            setQueue([...queue, ...suggestions]);
+          }
+        } catch (_) {}
+      }
+      next();
     };
 
     const handleError = () => console.error('Audio error:', audio.src);

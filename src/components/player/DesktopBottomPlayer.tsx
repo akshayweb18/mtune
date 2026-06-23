@@ -9,6 +9,8 @@ import {
 import { useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { showToast } from '@/components/shared/Toast';
+import { SleepTimer } from './SleepTimer';
+
 
 
 export function DesktopBottomPlayer() {
@@ -190,6 +192,8 @@ export function DesktopBottomPlayer() {
             />
           </div>
         </div>
+
+        <SleepTimer />
 
         <button className="text-[#A7A7A7] hover:text-white transition-colors">
           <Maximize2 className="w-4 h-4" />

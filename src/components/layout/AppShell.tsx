@@ -10,6 +10,10 @@ import { DesktopBottomPlayer } from '@/components/player/DesktopBottomPlayer';
 import AvatarDropdown from '@/components/profile/AvatarDropdown';
 import { ToastContainer } from '@/components/shared/Toast';
 import { useEdgeSwipeBack } from '@/hooks/useEdgeSwipeBack';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { PWAInstallPrompt } from '@/components/shared/PWAInstallPrompt';
+
+
 
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -18,6 +22,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   // Global mobile back-swipe gesture (left/right edge → history.back)
   useEdgeSwipeBack();
+
+  // Global keyboard shortcuts (Space, Alt+Arrow, M, L, Shift+S)
+  useKeyboardShortcuts();
+
 
 
   // Auth page: render children only — no sidebar, no players, no nav
@@ -77,6 +85,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Global Toast Notifications */}
       <ToastContainer />
+
+      {/* PWA Install Prompt */}
+      <PWAInstallPrompt />
     </>
   );
 }

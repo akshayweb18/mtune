@@ -79,6 +79,16 @@ export const saavnApi = {
     return data.data;
   },
 
+  // Song Lyrics
+  getSongLyrics: async (id: string) => {
+    try {
+      const { data } = await api.get(`/songs/${id}/lyrics`);
+      return data.data;
+    } catch {
+      return null;
+    }
+  },
+
   // Playlist Details
   getPlaylistDetails: async (id: string): Promise<Playlist> => {
     const { data } = await api.get(`/playlists`, { params: { id } });

@@ -61,12 +61,24 @@ main {
   }
 }
 
-/* â”€â”€â”€ Performance: hardware acceleration for animated elements â”€â”€â”€ */
+/* ─── Performance: hardware acceleration for animated elements ─── */
 .hw-accel {
   transform: translateZ(0);
   will-change: transform;
   backface-visibility: hidden;
 }
+
+/* ─── Utility animations ─── */
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.animate-slide-up { animation: slide-up 0.25s ease-out forwards; }
+.animate-fade-in  { animation: fade-in  0.2s ease-out forwards; }
 
 /* â”€â”€â”€ Images â”€â”€â”€ */
 img {

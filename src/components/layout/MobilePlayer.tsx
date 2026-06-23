@@ -10,6 +10,8 @@ import { useRef, useState } from 'react';
 import { useLibraryStore } from '@/store/useLibraryStore';
 import { AddToPlaylistModal } from '@/components/shared/AddToPlaylistModal';
 import { showToast } from '@/components/shared/Toast';
+import { SleepTimer } from '@/components/player/SleepTimer';
+
 
 export function MobilePlayer() {
   const currentSong   = usePlayerStore((s) => s.currentSong);
@@ -170,6 +172,7 @@ export function MobilePlayer() {
             >
               <ListMusic className="w-5 h-5" />
             </button>
+            <SleepTimer />
           </div>
 
           {/* Album Art or Queue */}
