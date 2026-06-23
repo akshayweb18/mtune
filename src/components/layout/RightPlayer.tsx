@@ -32,28 +32,12 @@ export function RightPlayer() {
     >
       <aside 
         className={cn(
-          "relative flex flex-col w-[320px] h-full bg-[#121212] border-l border-white/[0.06] overflow-y-auto pb-[110px] shrink-0 scrollbar-hide transition-transform duration-500 ease-in-out",
+          "flex flex-col w-[320px] h-full bg-[#121212] border-l border-white/[0.06] overflow-y-auto pb-[110px] shrink-0 scrollbar-hide transition-transform duration-500 ease-in-out",
           isOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
-        {/* Dynamic blurred background from album art */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-          {img && (
-            <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage: `url(${img})`,
-                filter: 'blur(80px) saturate(2)',
-                transform: 'scale(1.5)',
-                opacity: 0.25,
-              }}
-            />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-[#121212]/80 to-[#121212]" />
-        </div>
-
         {currentSong && (
-          <div className="relative z-10 flex flex-col w-full h-full">
+          <div className="flex flex-col w-full h-full">
             {/* Header */}
             <div className="px-4 pt-5 pb-2 flex items-center justify-between">
               <span className="text-[13px] font-bold text-white">Now playing</span>
