@@ -42,6 +42,7 @@ export function DesktopBottomPlayer() {
   const volumePct = (isMuted ? 0 : volume) * 100;
 
   const fmt = (t: number) => {
+    if (isNaN(t) || !isFinite(t)) return '0:00';
     const m = Math.floor(t / 60);
     const s = Math.floor(t % 60);
     return `${m}:${s < 10 ? '0' : ''}${s}`;

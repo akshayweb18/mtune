@@ -44,6 +44,7 @@ export function MobilePlayer() {
   const artistNames = currentSong.artists?.primary?.map(a => a.name).join(', ') || 'Unknown Artist';
 
   const fmt = (t: number) => {
+    if (isNaN(t) || !isFinite(t)) return '0:00';
     const m = Math.floor(t / 60);
     const s = Math.floor(t % 60);
     return `${m}:${s < 10 ? '0' : ''}${s}`;
