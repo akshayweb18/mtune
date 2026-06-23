@@ -10,11 +10,6 @@ const ALBUMS = [
   { color: '#F59E0B', label: 'Jazz & Soul', sub: 'Late evening', icon: '🎷' },
 ];
 
-const STATS = [
-  { value: '80M+', label: 'Songs' },
-  { value: '4K+', label: 'Artists' },
-  { value: 'HD', label: 'Audio' },
-];
 
 export default function MusicVisual() {
   return (
@@ -93,20 +88,6 @@ export default function MusicVisual() {
         ))}
       </div>
 
-      {/* Stats */}
-      <motion.div
-        className="music-visual-stats"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8, duration: 0.6 }}
-      >
-        {STATS.map((stat) => (
-          <div key={stat.label} className="music-visual-stat">
-            <span className="music-visual-stat-value">{stat.value}</span>
-            <span className="music-visual-stat-label">{stat.label}</span>
-          </div>
-        ))}
-      </motion.div>
 
       {/* Floating icons */}
       {[Radio, Mic2].map((Icon, i) => (
