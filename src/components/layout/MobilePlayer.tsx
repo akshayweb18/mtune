@@ -154,26 +154,30 @@ export function MobilePlayer() {
             className="flex items-center justify-between px-4"
             style={{ paddingTop: 'max(env(safe-area-inset-top, 16px), 16px)', paddingBottom: '8px' }}
           >
-            <button
-              onClick={() => setExpanded(false)}
-              className="w-10 h-10 flex items-center justify-center text-white/80 active:opacity-60"
-            >
-              <ChevronDown className="w-8 h-8" />
-            </button>
+            <div className="flex-1 flex items-center justify-start">
+              <button
+                onClick={() => setExpanded(false)}
+                className="w-10 h-10 flex items-center justify-center text-white/80 active:opacity-60 -ml-2"
+              >
+                <ChevronDown className="w-8 h-8" />
+              </button>
+            </div>
 
-            <div className="text-center">
-              <p className="text-[11px] font-bold text-[#A7A7A7] uppercase tracking-widest">
+            <div className="flex-[2] text-center px-2 min-w-0">
+              <p className="text-[11px] font-bold text-[#A7A7A7] uppercase tracking-widest truncate">
                 {currentSong.album?.name || 'Now Playing'}
               </p>
             </div>
 
-            <button
-              onClick={() => setShowQueue(!showQueue)}
-              className={cn('w-10 h-10 flex items-center justify-center active:opacity-60 transition-colors', showQueue ? 'text-[#FFD700]' : 'text-white/80')}
-            >
-              <ListMusic className="w-5 h-5" />
-            </button>
-            <SleepTimer />
+            <div className="flex-1 flex items-center justify-end gap-1">
+              <button
+                onClick={() => setShowQueue(!showQueue)}
+                className={cn('w-10 h-10 flex items-center justify-center active:opacity-60 transition-colors', showQueue ? 'text-[#FFD700]' : 'text-white/80')}
+              >
+                <ListMusic className="w-5 h-5" />
+              </button>
+              <SleepTimer dropUp={false} />
+            </div>
           </div>
 
           {/* Album Art or Queue */}

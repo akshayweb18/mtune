@@ -15,7 +15,11 @@ const OPTIONS = [
   { label: '2 hours', minutes: 120 },
 ];
 
-export function SleepTimer() {
+interface SleepTimerProps {
+  dropUp?: boolean;
+}
+
+export function SleepTimer({ dropUp = true }: SleepTimerProps) {
   const [open, setOpen]           = useState(false);
   const [activeMin, setActiveMin] = useState<number | null>(null);
   const [remaining, setRemaining] = useState<number>(0); // seconds
@@ -81,7 +85,10 @@ export function SleepTimer() {
 
       {open && (
         <div
-          className="absolute bottom-full mb-2 right-0 bg-[#282828] border border-white/10 rounded-xl shadow-2xl overflow-hidden z-[300] w-[160px]"
+          className={cn(
+            "absolute right-0 bg-[#282828] border border-white/10 rounded-xl shadow-2xl overflow-hidden z-[300] w-[160px]",
+            dropUp ? "bottom-full mb-2" : "top-full mt-2"
+          )}
           style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.7)' }}
         >
           <p className="px-3 py-2 text-[11px] font-bold text-white/40 uppercase tracking-wider border-b border-white/5">

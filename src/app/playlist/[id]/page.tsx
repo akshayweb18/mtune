@@ -186,7 +186,12 @@ export default function PlaylistPage() {
                       <Heart className={cn("w-5 h-5 transition-colors", isLikedSong ? "fill-secondary text-secondary drop-shadow-[0_0_10px_rgba(236,72,153,0.6)]" : "")} />
                     </button>
 
-                    <SongContextMenu song={song} queue={songs} className="md:opacity-0 md:group-hover:opacity-100" />
+                    <SongContextMenu 
+                      song={song} 
+                      queue={songs} 
+                      className="md:opacity-0 md:group-hover:opacity-100" 
+                      iconClassName="w-10 h-10" 
+                    />
 
                     {isCustom && (
                       <button 
@@ -194,7 +199,7 @@ export default function PlaylistPage() {
                           e.stopPropagation(); 
                           removeSongFromPlaylist(id as string, song.id); 
                         }}
-                        className="p-2 text-white/40 hover:text-red-400 transition touch-sm ml-1"
+                        className="w-10 h-10 flex items-center justify-center text-white/40 hover:text-red-400 transition"
                         title="Remove from playlist"
                       >
                         <Trash2 className="w-5 h-5" />
