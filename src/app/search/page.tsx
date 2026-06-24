@@ -194,9 +194,9 @@ function SearchContent() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <h4 className="text-[14px] font-bold text-white truncate">{decodeHtml(song.name)}</h4>
-                            <span className="text-[12px] text-[#A7A7A7] truncate">
+                            <p className="text-[12px] text-[#A7A7A7] truncate">
                               {decodeHtml(song.artists?.primary?.map((a: any) => a.name).join(', ') || 'Song')}
-                            </span>
+                            </p>
                           </div>
                           <SongContextMenu song={song} queue={songsResults.results} className="opacity-0 group-hover:opacity-100 touch-sm shrink-0" />
                         </div>
@@ -265,8 +265,8 @@ function SearchContent() {
                               <Play className="w-5 h-5 fill-white text-white" />
                             </div>
                           </div>
-                          <h4 className="text-[13px] font-bold text-white truncate">{album.title || album.name}</h4>
-                          <span className="text-[11px] text-white/40 truncate mt-0.5">{album.description || album.year || 'Album'}</span>
+                          <h4 className="text-[13px] font-bold text-white truncate w-full text-center">{album.title || album.name}</h4>
+                          <p className="text-[11px] text-white/40 truncate w-full text-center mt-0.5">{album.description || album.year || 'Album'}</p>
                         </Link>
                       ))}
                     </div>
@@ -300,8 +300,8 @@ function SearchContent() {
                               <Play className="w-5 h-5 fill-white text-white" />
                             </div>
                           </div>
-                          <h4 className="text-[13px] font-bold text-white truncate">{pl.title || pl.name}</h4>
-                          <span className="text-[11px] text-white/40 truncate mt-0.5">{pl.description || 'Playlist'}</span>
+                          <h4 className="text-[13px] font-bold text-white truncate w-full text-center">{pl.title || pl.name}</h4>
+                          <p className="text-[11px] text-white/40 truncate w-full text-center mt-0.5">{pl.description || 'Playlist'}</p>
                         </Link>
                       ))}
                     </div>
