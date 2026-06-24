@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { LogOut, Mail, Calendar, Music, Shield } from 'lucide-react';
 import type { User } from 'firebase/auth';
 
@@ -29,18 +28,11 @@ export default function ProfileCard({ user, onLogout, loggingOut }: ProfileCardP
   const joinDate = formatDate(user.metadata.creationTime ?? null);
 
   return (
-    <motion.div
-      className="profile-card"
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
-    >
+    <div className="profile-card">
       {/* Avatar */}
       <div className="profile-avatar-section">
-        <motion.div
+        <div
           className="profile-avatar-ring"
-          animate={{ boxShadow: ['0 0 0 0px rgba(29,185,84,0.3)', '0 0 0 8px rgba(29,185,84,0.1)', '0 0 0 0px rgba(29,185,84,0.3)'] }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
         >
           {user.photoURL ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -55,7 +47,7 @@ export default function ProfileCard({ user, onLogout, loggingOut }: ProfileCardP
               <span>{initials}</span>
             </div>
           )}
-        </motion.div>
+        </div>
 
         <div className="profile-identity">
           <h1 className="profile-name">{user.displayName ?? 'Music Lover'}</h1>
@@ -96,17 +88,15 @@ export default function ProfileCard({ user, onLogout, loggingOut }: ProfileCardP
       </div>
 
       {/* Logout */}
-      <motion.button
+      <button
         id="profile-logout-btn"
         onClick={onLogout}
         disabled={loggingOut}
         className="profile-logout-btn"
-        whileHover={{ scale: loggingOut ? 1 : 1.01 }}
-        whileTap={{ scale: loggingOut ? 1 : 0.97 }}
       >
         <LogOut size={16} />
         <span>{loggingOut ? 'Signing out…' : 'Sign Out'}</span>
-      </motion.button>
-    </motion.div>
+      </button>
+    </div>
   );
 }

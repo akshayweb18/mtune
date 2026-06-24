@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
@@ -35,18 +34,15 @@ export default function ProfilePage() {
   return (
     <div className="profile-page">
       {/* Back button */}
-      <motion.button
+      <button
         onClick={() => router.push('/')}
         className="profile-back-btn"
-        initial={{ opacity: 0, x: -10 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.4 }}
         aria-label="Back to home"
         id="profile-back-btn"
       >
         <ArrowLeft size={16} />
         <span>Back</span>
-      </motion.button>
+      </button>
 
       {/* Profile card */}
       <ProfileCard user={user} onLogout={handleLogout} loggingOut={loggingOut} />
