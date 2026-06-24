@@ -10,6 +10,7 @@ import { Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { POPULAR_ARTISTS_DATA } from '@/data/popular_artists';
+import AvatarDropdown from '@/components/profile/AvatarDropdown';
 
 // ── Language Filter Config ──────────────────────────────────────────────────
 
@@ -707,15 +708,21 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-full animate-fade-in">
+    <div className="min-h-full animate-fade-in relative">
       {/* ── Mobile Header ── */}
-      <div className="md:hidden flex items-center justify-between px-4 pt-[max(env(safe-area-inset-top,16px),16px)] pb-3">
+      <div className="md:hidden flex items-center justify-between px-4 pt-[max(env(safe-area-inset-top,16px),16px)] pb-3 relative">
         <h1 className="text-[22px] font-bold text-white">{getGreeting()}</h1>
+        <div className="z-[9000]">
+          <AvatarDropdown />
+        </div>
       </div>
 
       {/* ── Desktop Header ── */}
-      <div className="hidden md:flex items-center justify-between px-8 pt-8 pb-4">
+      <div className="hidden md:flex items-center justify-between px-8 pt-8 pb-4 relative">
         <h1 className="text-[32px] font-black text-white tracking-tight">{getGreeting()}</h1>
+        <div className="z-[9000]">
+          <AvatarDropdown />
+        </div>
       </div>
 
       {/* ── Language Filter Bar ── */}

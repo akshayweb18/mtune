@@ -7,7 +7,7 @@ import { RightPlayer } from '@/components/layout/RightPlayer';
 import { MobileBottomNav } from '@/components/layout/MobileBottomNav';
 import { MobilePlayer } from '@/components/layout/MobilePlayer';
 import { AudioEngine } from '@/components/player/AudioEngine';
-import AvatarDropdown from '@/components/profile/AvatarDropdown';
+
 import { ToastContainer } from '@/components/shared/Toast';
 import { useEdgeSwipeBack } from '@/hooks/useEdgeSwipeBack';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
@@ -59,12 +59,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           }}
         >
           <div
-            className="min-h-full"
+            className="min-h-full relative"
             style={{
               paddingBottom:
                 'calc(var(--scroll-pad-mobile, 156px) + env(safe-area-inset-bottom, 0px))',
             }}
           >
+
             {children}
           </div>
         </main>
@@ -82,10 +83,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Audio Engine (invisible) */}
       <AudioEngine />
 
-      {/* Floating avatar — top-right, shown on all non-auth pages */}
-      <div className="avatar-dropdown-portal">
-        <AvatarDropdown />
-      </div>
 
       {/* Global Toast Notifications */}
       <ToastContainer />

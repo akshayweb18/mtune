@@ -1,14 +1,17 @@
 'use client';
 
+import { useState } from 'react';
+
 import { usePlayerStore } from '@/store/usePlayerStore';
 import { useLibraryStore } from '@/store/useLibraryStore';
 import { Play, Pause, SkipBack, SkipForward, Repeat, Shuffle, Heart, Music, ListMusic } from 'lucide-react';
 import { cn, decodeHtml } from '@/lib/utils';
 
 export function RightPlayer() {
-  const { currentSong, isPlaying, togglePlay, progress, duration, toggleLoop, isLooping, toggleShuffle, isShuffling, next, previous, setProgress } = usePlayerStore();
+  const { currentSong, isPlaying, togglePlay, progress, duration, toggleLoop, isLooping, toggleShuffle, isShuffling, next, previous, setProgress, queue, setCurrentSong } = usePlayerStore();
   const { isLiked, toggleLike } = useLibraryStore();
 
+  const [showQueue, setShowQueue] = useState(false);
   const isOpen = !!currentSong;
 
   // Safe defaults for when currentSong is null (during closing animation)
@@ -41,21 +44,56 @@ export function RightPlayer() {
             {/* Header */}
             <div className="px-4 pt-5 pb-2 flex items-center justify-between">
               <span className="text-[13px] font-bold text-white">Now playing</span>
-              <button className="text-[#A7A7A7] hover:text-white transition-colors">
+              <button 
+                onClick={() => setShowQueue(!showQueue)}
+                className={cn('transition-colors', showQueue ? 'text-[#FFD700]' : 'text-[#A7A7A7] hover:text-white')}
+              >
                 <ListMusic className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Album Art */}
-            <div className="px-4 mt-2">
-              <div className="w-full aspect-square rounded-sm overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
-                {img ? (
-                  <img src={img} alt={currentSong.name} className="w-full h-full object-cover" loading="lazy" />
-                ) : (
-                  <div className="w-full h-full bg-[#282828]" />
-                )}
+            {/* Album Art or Queue */}
+            {showQueue ? (
+              <div className="px-4 mt-2 h-[288px] overflow-y-auto scrollbar-hide">
+                <h3 className="text-[14px] font-bold text-white mb-3 flex items-center justify-between">
+                  <span>Queue ({queue.length})</span>
+                </h3>
+                <div className="flex flex-col gap-1">
+                  {queue.map((song, i) => {
+                    const isActive = song.id === currentSong.id;
+                    const songImg = song.image?.[1]?.url || song.image?.[0]?.url;
+                    return (
+                      <div
+                        key={`${song.id}-${i}`}
+                        onClick={() => setCurrentSong(song)}
+                        className={cn(
+                          'flex items-center gap-3 p-2 rounded-xl transition-colors cursor-pointer',
+                          isActive ? 'bg-white/10' : 'hover:bg-white/5'
+                        )}
+                      >
+                        <div className="w-10 h-10 rounded-md overflow-hidden shrink-0">
+                          {songImg && <img src={songImg} alt={song.name} className="w-full h-full object-cover" />}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className={cn('text-[13px] font-bold truncate', isActive ? 'text-[#FFD700]' : 'text-white')}>{decodeHtml(song.name)}</p>
+                          <p className="text-[11px] text-[#A7A7A7] truncate">{decodeHtml(song.artists?.primary?.map(a => a.name).join(', '))}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="px-4 mt-2">
+                <div className="w-full aspect-square rounded-sm overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+                  {img ? (
+                    <img src={img} alt={currentSong.name} className="w-full h-full object-cover" loading="lazy" />
+                  ) : (
+                    <div className="w-full h-full bg-[#282828]" />
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Song Info + Like */}
             <div className="px-4 mt-5 flex items-start justify-between gap-2">

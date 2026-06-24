@@ -1122,7 +1122,7 @@ img {
    AVATAR DROPDOWN â€” Floating top-right
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .avatar-dropdown-portal {
-  position: fixed;
+  position: absolute;
   top: 1rem;
   right: 1rem;
   z-index: 9000;
